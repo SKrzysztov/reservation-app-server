@@ -14,7 +14,9 @@ public class ApplicationUserDetails implements UserDetails {
 //    private UUID id;
     private String login;
     private String password;
-    private String name;
+    private String firstName;
+    private String lastName;
+
     private String email;
     private Collection<? extends GrantedAuthority> authorities;
 

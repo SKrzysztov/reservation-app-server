@@ -30,7 +30,8 @@ public class ApplicationUserDetailsService implements UserDetailsService {
 //                .id(user.id())
                 .email(user.getEmail())
                 .login(user.getLogin())
-                .name(user.getFirstName())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
                 .password(user.getPassword())
                 .authorities(authorities)
                 .build();

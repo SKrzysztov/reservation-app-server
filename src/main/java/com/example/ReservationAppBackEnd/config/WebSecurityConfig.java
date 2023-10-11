@@ -31,10 +31,8 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests()
-                .requestMatchers("/actuator/**").permitAll()
                 .requestMatchers("/public/**", "/auth/**").permitAll()
                 .requestMatchers("/", "/error", "/csrf").permitAll()
-                .requestMatchers("/ws/**").permitAll()
                 .requestMatchers("/auth/register", "/auth/authenticate").permitAll()
                 .anyRequest().authenticated();
         http.addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
