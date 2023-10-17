@@ -1,6 +1,7 @@
 package com.example.ReservationAppBackEnd.service.models;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.*;
@@ -15,5 +16,8 @@ import lombok.*;
 public class Service {
     @Id
     private long id;
-
+    private String description;
+    private String name;
+    @Enumerated
+    private ServiceStatus status;
 }

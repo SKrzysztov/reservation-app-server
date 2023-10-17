@@ -1,6 +1,7 @@
 package com.example.ReservationAppBackEnd.config;
 
 import com.example.ReservationAppBackEnd.security.TokenAuthenticationFilter;
+import com.example.ReservationAppBackEnd.user.model.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,6 +33,8 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests()
                 .requestMatchers("/auth/register", "/auth/authenticate").permitAll()
+                .requestMatchers("/auth/**").permitAll()
+                .requestMatchers("/test/jsonadmin").hasAuthority(Role.ADMIN.name())
                 .anyRequest().authenticated();
         http.addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         http.exceptionHandling(e -> e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)));
