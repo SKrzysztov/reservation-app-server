@@ -1,6 +1,7 @@
 package com.example.ReservationAppBackEnd.customService.service;
 
 
+import com.example.ReservationAppBackEnd.customService.api.CustomServiceRequest;
 import com.example.ReservationAppBackEnd.customService.models.CustomService;
 import com.example.ReservationAppBackEnd.customService.models.CustomServiceStatus;
 import com.example.ReservationAppBackEnd.customService.repository.CustomServiceRepository;
@@ -13,11 +14,15 @@ public class CustomServiceService {
 
     @Autowired
     private CustomServiceRepository serviceRepository;
-    public CustomService save(User user) {
-        CustomService customService = new CustomService();
-        customService.setStatus(CustomServiceStatus.WAITING);
-        customService.setUser(user);
+    public CustomService createService( User user,CustomServiceRequest customServiceRequest) {
+        CustomService createService = CustomService.builder()
+                .name(customServiceRequest.name())
+                .description(customServiceRequest.description())
+                .status(CustomServiceStatus.WAITING)
+                .user(user)
+                .build();
 
-        return serviceRepository.save(customService);
+
+        return serviceRepository.save(createService);
     }
 }

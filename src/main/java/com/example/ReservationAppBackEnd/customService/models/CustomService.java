@@ -13,6 +13,7 @@ import lombok.*;
 @Setter
 public class CustomService {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String description;
     private String name;

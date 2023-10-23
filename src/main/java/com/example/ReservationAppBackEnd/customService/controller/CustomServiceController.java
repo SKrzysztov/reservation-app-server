@@ -1,17 +1,16 @@
 package com.example.ReservationAppBackEnd.customService.controller;
 
+import com.example.ReservationAppBackEnd.customService.api.CustomServiceRequest;
 import com.example.ReservationAppBackEnd.customService.models.CustomService;
 import com.example.ReservationAppBackEnd.customService.service.CustomServiceService;
 import com.example.ReservationAppBackEnd.user.model.User;
 import com.example.ReservationAppBackEnd.user.service.UserService;
 
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/services")
@@ -26,9 +25,10 @@ public class CustomServiceController {
         this.userService = userService;
     }
     @PostMapping("/create")
-    public ResponseEntity<?> createService(){
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<CustomService> createService(@Valid @RequestBody CustomServiceRequest serviceRequest){
         User user = userService.getLoggedUser();
-        CustomService newService =  customServiceService.save(user);
+        CustomService newService =  customServiceService.createService(user,serviceRequest);
         return ResponseEntity.ok(newService);
     }
 }
