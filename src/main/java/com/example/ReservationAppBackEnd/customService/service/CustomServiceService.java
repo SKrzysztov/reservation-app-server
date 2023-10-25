@@ -88,4 +88,18 @@ public class CustomServiceService {
     public List<CustomService> getAllServices() {
         return serviceRepository.findAll();
     }
+    public CustomService setServiceStatusAvailable(Long serviceId) {
+        Optional<CustomService> existingService = serviceRepository.findById(serviceId);
+
+        if (existingService.isPresent()) {
+            CustomService serviceToUpdate = existingService.get();
+
+
+            serviceToUpdate.setStatus(CustomServiceStatus.AVAILABLE);
+
+            return serviceRepository.save(serviceToUpdate);
+        }
+
+        return null;
+    }
 }

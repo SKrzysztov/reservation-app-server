@@ -52,8 +52,19 @@ public class CustomServiceController {
     public List<CustomService> getAllServices(){
         return customServiceService.getAllServices();
     }
+    @PutMapping("/{serviceId}/set-available")
+    public ResponseEntity<CustomService> setServiceStatusAvailable(@PathVariable Long serviceId) {
+        CustomService updatedService = customServiceService.setServiceStatusAvailable(serviceId);
+
+        if (updatedService != null) {
+            return new ResponseEntity<>(updatedService, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Możesz również rzucić odpowiedni wyjątek
+        }
+    }
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<String> handleNotFoundException(NotFoundException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
+
 }
