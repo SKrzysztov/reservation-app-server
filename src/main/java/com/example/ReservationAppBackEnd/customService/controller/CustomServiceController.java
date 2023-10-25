@@ -50,6 +50,7 @@ public class CustomServiceController {
     }
     @GetMapping("/")
     public List<CustomService> getAllServices(){
+
         return customServiceService.getAllServices();
     }
     @PutMapping("/{serviceId}/set-available")
@@ -59,7 +60,7 @@ public class CustomServiceController {
         if (updatedService != null) {
             return new ResponseEntity<>(updatedService, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Możesz również rzucić odpowiedni wyjątek
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
     @ExceptionHandler(NotFoundException.class)

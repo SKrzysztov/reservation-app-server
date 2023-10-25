@@ -1,4 +1,4 @@
-package com.example.ReservationAppBackEnd.reservation.models;
+package com.example.ReservationAppBackEnd.reservationDetails.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
