@@ -7,7 +7,9 @@ import com.example.ReservationAppBackEnd.user.api.RegisterRequest;
 import com.example.ReservationAppBackEnd.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -18,9 +20,11 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping("/login")
-    public LoginResponse login(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         String token = userService.authenticateAndGetToken(loginRequest.login(), loginRequest.password());
-        return new LoginResponse(token);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", token);
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(new LoginResponse(token));
     }
 
     @ResponseStatus(HttpStatus.CREATED)

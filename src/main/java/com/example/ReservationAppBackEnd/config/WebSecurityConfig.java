@@ -34,7 +34,7 @@ public class WebSecurityConfig {
         http.authorizeHttpRequests()
                 .requestMatchers("/auth/register", "/auth/authenticate").permitAll()
                 .requestMatchers("/auth/**").permitAll()
-                .requestMatchers("/api/services/create").hasAuthority(Role.USER.name())
+                .requestMatchers("/api/services/create").hasAuthority(Role.ADMIN.name())
                 .anyRequest().authenticated();
         http.addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         http.exceptionHandling(e -> e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)));

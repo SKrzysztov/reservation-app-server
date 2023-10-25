@@ -18,26 +18,28 @@ public class UserInit implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         if(userRepository.count() == 0) {
-            User user = User.builder()
+            User admin1 = User.builder()
                     .id(null)
-                    .email("useruser@wp.pl")
-                    .login("user123")
-                    .firstName("User")
-                    .password(passwordEncoder.encode("User123"))
-                    .role(Role.USER)
-                    .build();
-
-            User admin = User.builder()
-                    .id(null)
-                    .email("adminadmin@wp.pl")
-                    .login("admin123")
+                    .email("admin1@wp.pl")
+                    .login("administrator1")
                     .firstName("Admin")
-                    .password(passwordEncoder.encode("Admin123"))
+                    .lastName("Admin")
+                    .password(passwordEncoder.encode("Administrator"))
                     .role(Role.ADMIN)
                     .build();
 
-            userRepository.save(user);
-            userRepository.save(admin);
+            User admin2 = User.builder()
+                    .id(null)
+                    .email("admin2@wp.pl")
+                    .login("Administrator2")
+                    .firstName("Admin")
+                    .lastName("Admin")
+                    .password(passwordEncoder.encode("Administrator"))
+                    .role(Role.ADMIN)
+                    .build();
+
+            userRepository.save(admin1);
+            userRepository.save(admin2);
         }
     }
 }
