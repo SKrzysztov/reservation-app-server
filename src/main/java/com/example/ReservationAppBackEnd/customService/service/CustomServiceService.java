@@ -56,7 +56,7 @@ public class CustomServiceService {
     }
 
     public CustomService updateService(User user, Long id, CustomService updatedService) {
-        Optional<CustomService> existingService = serviceRepository.findById(id);
+            Optional<CustomService> existingService = serviceRepository.findById(id);
 
         if (existingService.isPresent()) {
             CustomService serviceToUpdate = existingService.get();
