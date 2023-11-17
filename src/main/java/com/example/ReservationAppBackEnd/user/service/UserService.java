@@ -1,5 +1,7 @@
 package com.example.ReservationAppBackEnd.user.service;
 
+import com.example.ReservationAppBackEnd.customService.models.CustomService;
+import com.example.ReservationAppBackEnd.customService.models.CustomServiceStatus;
 import com.example.ReservationAppBackEnd.security.ApplicationUserDetails;
 import com.example.ReservationAppBackEnd.security.TokenProvider;
 import com.example.ReservationAppBackEnd.user.api.RegisterRequest;
@@ -54,6 +56,7 @@ public class UserService {
                 .firstName(registerRequest.firstName())
                 .lastName(registerRequest.lastName())
                 .email(registerRequest.email())
+                .accountNonLocked(true)
                 .role(Role.USER)
                 .build();
 
@@ -63,5 +66,19 @@ public class UserService {
     public String authenticateAndGetToken(String username, String password) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         return tokenProvider.generate(authentication);
+    }
+
+    public User lockAccount(String login) {
+        Optional<User> existingUser = findUserByLogin(login);
+
+        if (existingUser.isPresent()) {
+            User userToLock = existingUser.get();
+
+            userToLock.setAccountNonLocked(false);
+
+            return userRepository.save(userToLock);
+        }
+
+        return null;
     }
 }

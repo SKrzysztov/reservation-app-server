@@ -19,6 +19,7 @@ public class User {
     private String lastName;
     private String email;
     private String password;
+    private boolean accountNonLocked;
     @Enumerated
     Role role;
 }

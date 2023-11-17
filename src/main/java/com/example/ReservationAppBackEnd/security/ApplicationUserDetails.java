@@ -16,7 +16,7 @@ public class ApplicationUserDetails implements UserDetails {
     private String password;
     private String firstName;
     private String lastName;
-
+    private boolean accountNonLocked;
     private String email;
     private Collection<? extends GrantedAuthority> authorities;
 
@@ -32,7 +32,7 @@ public class ApplicationUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return accountNonLocked;
     }
 
     @Override

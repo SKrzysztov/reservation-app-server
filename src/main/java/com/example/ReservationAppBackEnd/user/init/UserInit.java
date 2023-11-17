@@ -26,6 +26,7 @@ public class UserInit implements CommandLineRunner {
                     .lastName("Admin")
                     .password(passwordEncoder.encode("Administrator"))
                     .role(Role.ADMIN)
+                    .accountNonLocked(true)
                     .build();
 
             User admin2 = User.builder()
@@ -36,6 +37,7 @@ public class UserInit implements CommandLineRunner {
                     .lastName("Admin")
                     .password(passwordEncoder.encode("Administrator"))
                     .role(Role.ADMIN)
+                    .accountNonLocked(false)
                     .build();
 
             userRepository.save(admin1);

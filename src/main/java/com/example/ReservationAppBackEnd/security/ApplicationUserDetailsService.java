@@ -33,6 +33,7 @@ public class ApplicationUserDetailsService implements UserDetailsService {
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .password(user.getPassword())
+                .accountNonLocked(user.isAccountNonLocked())
                 .authorities(authorities)
                 .build();
     }
