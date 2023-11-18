@@ -1,5 +1,6 @@
 package com.example.ReservationAppBackEnd.customService.domein;
 
+import com.example.ReservationAppBackEnd.customServiceCategory.domain.CustomServiceCategory;
 import com.example.ReservationAppBackEnd.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,13 +13,23 @@ import lombok.*;
 @Getter
 @Setter
 public class CustomService {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     private String description;
+
     private String name;
+
     @Enumerated
     private CustomServiceStatus status;
+
     @ManyToOne(optional = false)
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private CustomServiceCategory customServiceCategory;
+
 }
