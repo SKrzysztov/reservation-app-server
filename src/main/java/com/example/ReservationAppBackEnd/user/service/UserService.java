@@ -1,12 +1,10 @@
 package com.example.ReservationAppBackEnd.user.service;
 
-import com.example.ReservationAppBackEnd.customService.models.CustomService;
-import com.example.ReservationAppBackEnd.customService.models.CustomServiceStatus;
 import com.example.ReservationAppBackEnd.security.ApplicationUserDetails;
 import com.example.ReservationAppBackEnd.security.TokenProvider;
 import com.example.ReservationAppBackEnd.user.api.RegisterRequest;
-import com.example.ReservationAppBackEnd.user.model.Role;
-import com.example.ReservationAppBackEnd.user.model.User;
+import com.example.ReservationAppBackEnd.user.domain.Role;
+import com.example.ReservationAppBackEnd.user.domain.User;
 import com.example.ReservationAppBackEnd.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;

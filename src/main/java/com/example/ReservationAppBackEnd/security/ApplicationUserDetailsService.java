@@ -1,6 +1,6 @@
 package com.example.ReservationAppBackEnd.security;
 
-import com.example.ReservationAppBackEnd.user.model.User;
+import com.example.ReservationAppBackEnd.user.domain.User;
 import com.example.ReservationAppBackEnd.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

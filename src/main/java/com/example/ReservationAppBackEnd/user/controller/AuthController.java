@@ -4,7 +4,7 @@ package com.example.ReservationAppBackEnd.user.controller;
 import com.example.ReservationAppBackEnd.user.api.LoginRequest;
 import com.example.ReservationAppBackEnd.user.api.LoginResponse;
 import com.example.ReservationAppBackEnd.user.api.RegisterRequest;
-import com.example.ReservationAppBackEnd.user.model.User;
+import com.example.ReservationAppBackEnd.user.domain.User;
 import com.example.ReservationAppBackEnd.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

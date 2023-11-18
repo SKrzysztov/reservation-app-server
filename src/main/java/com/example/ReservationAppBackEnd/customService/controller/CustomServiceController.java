@@ -1,10 +1,10 @@
 package com.example.ReservationAppBackEnd.customService.controller;
 
 import com.example.ReservationAppBackEnd.customService.api.CustomServiceRequest;
-import com.example.ReservationAppBackEnd.customService.models.CustomService;
+import com.example.ReservationAppBackEnd.customService.domein.CustomService;
 import com.example.ReservationAppBackEnd.customService.service.CustomServiceService;
 import com.example.ReservationAppBackEnd.error.NotFoundException;
-import com.example.ReservationAppBackEnd.user.model.User;
+import com.example.ReservationAppBackEnd.user.domain.User;
 import com.example.ReservationAppBackEnd.user.service.UserService;
 
 import jakarta.validation.Valid;

@@ -1,12 +1,12 @@
 package com.example.ReservationAppBackEnd.customService.service;
 
 import com.example.ReservationAppBackEnd.customService.api.CustomServiceRequest;
-import com.example.ReservationAppBackEnd.customService.models.CustomService;
-import com.example.ReservationAppBackEnd.customService.models.CustomServiceStatus;
+import com.example.ReservationAppBackEnd.customService.domein.CustomService;
+import com.example.ReservationAppBackEnd.customService.domein.CustomServiceStatus;
 import com.example.ReservationAppBackEnd.customService.repository.CustomServiceRepository;
 import com.example.ReservationAppBackEnd.error.NotFoundException;
 import com.example.ReservationAppBackEnd.error.UnauthorizedException;
-import com.example.ReservationAppBackEnd.user.model.User;
+import com.example.ReservationAppBackEnd.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

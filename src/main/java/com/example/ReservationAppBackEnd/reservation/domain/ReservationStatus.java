@@ -1,4 +1,4 @@
-package com.example.ReservationAppBackEnd.reservation.models;
+package com.example.ReservationAppBackEnd.reservation.domain;
 
 public enum ReservationStatus {
     WAITLISTED,

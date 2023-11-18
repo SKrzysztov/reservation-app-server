@@ -1,7 +1,7 @@
 package com.example.ReservationAppBackEnd.user.init;
 
-import com.example.ReservationAppBackEnd.user.model.Role;
-import com.example.ReservationAppBackEnd.user.model.User;
+import com.example.ReservationAppBackEnd.user.domain.Role;
+import com.example.ReservationAppBackEnd.user.domain.User;
 import com.example.ReservationAppBackEnd.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;

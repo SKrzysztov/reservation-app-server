@@ -1,4 +1,4 @@
-package com.example.ReservationAppBackEnd.customService.models;
+package com.example.ReservationAppBackEnd.customService.domein;
 
 public enum CustomServiceStatus {
     AVAILABLE,

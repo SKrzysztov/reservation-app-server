@@ -1,4 +1,4 @@
-package com.example.ReservationAppBackEnd.user.model;
+package com.example.ReservationAppBackEnd.user.domain;
 
 import jakarta.persistence.*;
 import lombok.*;

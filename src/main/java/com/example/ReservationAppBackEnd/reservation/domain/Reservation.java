@@ -1,6 +1,5 @@
-package com.example.ReservationAppBackEnd.reservation.models;
+package com.example.ReservationAppBackEnd.reservation.domain;
 
-import com.example.ReservationAppBackEnd.reservationDetails.models.ReservationDetails;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,10 +11,13 @@ import lombok.*;
 @Getter
 @Setter
 public class Reservation {
+
     @Id
     private Long id;
+
     @Enumerated
     ReservationStatus status;
+
     private String name;
 //    @OneToOne
 //    private ReservationDetails details;

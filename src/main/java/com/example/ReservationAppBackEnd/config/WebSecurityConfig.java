@@ -1,7 +1,7 @@
 package com.example.ReservationAppBackEnd.config;
 
 import com.example.ReservationAppBackEnd.security.TokenAuthenticationFilter;
-import com.example.ReservationAppBackEnd.user.model.Role;
+import com.example.ReservationAppBackEnd.user.domain.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

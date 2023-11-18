@@ -1,6 +1,6 @@
-package com.example.ReservationAppBackEnd.customService.models;
+package com.example.ReservationAppBackEnd.customService.domein;
 
-import com.example.ReservationAppBackEnd.user.model.User;
+import com.example.ReservationAppBackEnd.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
 

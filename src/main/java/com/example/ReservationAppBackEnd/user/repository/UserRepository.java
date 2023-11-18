@@ -1,6 +1,6 @@
 package com.example.ReservationAppBackEnd.user.repository;
 
-import com.example.ReservationAppBackEnd.user.model.User;
+import com.example.ReservationAppBackEnd.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
