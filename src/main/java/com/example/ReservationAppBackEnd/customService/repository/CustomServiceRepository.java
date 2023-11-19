@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface CustomServiceRepository extends JpaRepository<CustomService,Long> {
-    List<CustomService> findByCategory(CustomServiceCategory category);
+
 }
