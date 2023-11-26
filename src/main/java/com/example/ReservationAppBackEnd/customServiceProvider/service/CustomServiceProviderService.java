@@ -26,13 +26,10 @@ public class CustomServiceProviderService {
     private final CustomServiceCategoryRepository customServiceCategoryRepository; // Dodane pole repozytorium
 
     public CustomServiceProvider createServiceProvider(CustomServiceProviderRequest serviceProviderRequest, Long categoryId) {
-        // Tworzenie adresu
         Address address = addressService.createAddress(serviceProviderRequest.address());
 
-        // Pobieranie zalogowanego użytkownika
         User loggedInUser = userService.getLoggedUser();
 
-        // Pobieranie kategorii
         CustomServiceCategory category = getExistingCategory(categoryId);
 
         CustomServiceProvider serviceProvider = CustomServiceProvider.builder()

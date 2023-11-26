@@ -4,6 +4,7 @@ import com.example.ReservationAppBackEnd.customServiceCategory.domain.CustomServ
 import com.example.ReservationAppBackEnd.customServiceProvider.domain.CustomServiceProvider;
 import com.example.ReservationAppBackEnd.reservation.domain.Reservation;
 import com.example.ReservationAppBackEnd.user.domain.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,6 +30,7 @@ public class CustomService {
     @Enumerated
     private CustomServiceStatus status;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "service_provider_id")
     private CustomServiceProvider serviceProvider;

@@ -13,5 +13,7 @@ public record CustomServiceRequest (
 
     @Pattern(message = "Service Description is invalid", regexp = ".{3,100}")
     @NotBlank
-    String description
+    String description,
+
+    Long serviceProviderId
 ){}

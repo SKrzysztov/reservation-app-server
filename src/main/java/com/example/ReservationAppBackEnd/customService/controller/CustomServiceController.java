@@ -3,12 +3,9 @@ package com.example.ReservationAppBackEnd.customService.controller;
 import com.example.ReservationAppBackEnd.customService.api.CustomServiceRequest;
 import com.example.ReservationAppBackEnd.customService.domein.CustomService;
 import com.example.ReservationAppBackEnd.customService.service.CustomServiceService;
-import com.example.ReservationAppBackEnd.error.NotFoundException;
 import com.example.ReservationAppBackEnd.user.domain.User;
-import com.example.ReservationAppBackEnd.user.service.UserService;
-
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,56 +13,51 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/services")
+@RequestMapping("/api/custom-services")
+@RequiredArgsConstructor
 public class CustomServiceController {
 
-
     private final CustomServiceService customServiceService;
-    private final UserService userService;
-    @Autowired
-    public CustomServiceController(CustomServiceService customServiceService, UserService userService) {
-        this.customServiceService = customServiceService;
-        this.userService = userService;
-    }
+
     @PostMapping("/create")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<CustomService> createService(@Valid @RequestBody CustomServiceRequest serviceRequest){
-        User user = userService.getLoggedUser();
-        CustomService newService =  customServiceService.createService(user,serviceRequest);
-        return ResponseEntity.ok(newService);
+    public ResponseEntity<CustomService> createService(
+            @RequestBody @Valid CustomServiceRequest customServiceRequest) {
+        CustomService createdService = customServiceService.createService(customServiceRequest);
+        return new ResponseEntity<>(createdService, HttpStatus.CREATED);
     }
-    @PutMapping("/{id}")
-    public CustomService updateService(@PathVariable Long id, @RequestBody CustomService customService) {
-        User user = userService.getLoggedUser();
-        return customServiceService.updateService(user, id, customService);
-    }
+
     @GetMapping("/{id}")
-    public CustomService getServiceById(@PathVariable Long id) {
-        return customServiceService.getServiceById(id);
+    public ResponseEntity<CustomService> getServiceById(@PathVariable Long id) {
+        CustomService service = customServiceService.getServiceById(id);
+        return ResponseEntity.ok(service);
     }
-    @DeleteMapping("/{id}")
-    public void deleteService(@PathVariable Long id) {
-        User user = userService.getLoggedUser();
+
+    @GetMapping("/all")
+    public ResponseEntity<List<CustomService>> getAllServices() {
+        List<CustomService> services = customServiceService.getAllServices();
+        return ResponseEntity.ok(services);
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<CustomService> updateService(
+            @PathVariable Long id,
+            @RequestBody CustomService updatedService,
+            @RequestAttribute("user") User user) {
+        CustomService updated = customServiceService.updateService(user, id, updatedService);
+        return ResponseEntity.ok(updated);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteService(
+            @PathVariable Long id,
+            @RequestAttribute("user") User user) {
         customServiceService.deleteService(user, id);
-    }
-    @GetMapping("/")
-    public List<CustomService> getAllServices(){
-
-        return customServiceService.getAllServices();
-    }
-    @PutMapping("/{serviceId}/set-available")
-    public ResponseEntity<CustomService> setServiceStatusAvailable(@PathVariable Long serviceId) {
-        CustomService updatedService = customServiceService.setServiceStatusAvailable(serviceId);
-
-        if (updatedService != null) {
-            return new ResponseEntity<>(updatedService, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<String> handleNotFoundException(NotFoundException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+        return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("/set-available/{id}")
+    public ResponseEntity<CustomService> setServiceStatusAvailable(@PathVariable Long id) {
+        CustomService updated = customServiceService.setServiceStatusAvailable(id);
+        return ResponseEntity.ok(updated);
+    }
 }
