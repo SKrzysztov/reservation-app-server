@@ -6,5 +6,8 @@ import lombok.Builder;
 @Builder
 public record CustomServiceProviderRequest(
    String name,
-   AddressRequest address
-) {}
+   AddressRequest address,
+   Long categoryId
+
+) {
+}

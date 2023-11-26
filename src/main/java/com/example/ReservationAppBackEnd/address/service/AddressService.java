@@ -3,6 +3,7 @@ package com.example.ReservationAppBackEnd.address.service;
 import com.example.ReservationAppBackEnd.address.api.AddressRequest;
 import com.example.ReservationAppBackEnd.address.domain.Address;
 import com.example.ReservationAppBackEnd.address.repository.AddressRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,14 +11,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class AddressService {
 
     private final AddressRepository addressRepository;
-
-    @Autowired
-    public AddressService(AddressRepository addressRepository) {
-        this.addressRepository = addressRepository;
-    }
 
     public List<Address> getAllAddresses() {
         return addressRepository.findAll();
