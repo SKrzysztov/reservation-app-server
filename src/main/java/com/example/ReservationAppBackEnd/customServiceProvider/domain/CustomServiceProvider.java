@@ -23,6 +23,7 @@ public class CustomServiceProvider {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -32,7 +33,7 @@ public class CustomServiceProvider {
     @OneToMany(mappedBy = "serviceProvider", cascade = CascadeType.ALL)
     private List<CustomService> servicesOffered;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "category_id")
     private CustomServiceCategory customServiceCategory;
 
@@ -44,5 +45,8 @@ public class CustomServiceProvider {
 
     @ManyToOne(optional = false)
     private User user;
+
+    @Enumerated
+    private StatusCustomServiceProvider statusCustomServiceProvider;
 
 }

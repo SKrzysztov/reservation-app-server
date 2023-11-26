@@ -5,6 +5,4 @@ public enum CustomServiceStatus {
 
     NONAVAILABLE,
 
-    WAITING,
-
 }

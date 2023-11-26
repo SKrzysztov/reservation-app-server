@@ -23,8 +23,6 @@ public class CustomServiceService {
         CustomService createService = CustomService.builder()
                 .name(customServiceRequest.name())
                 .description(customServiceRequest.description())
-                .status(CustomServiceStatus.WAITING)
-                .user(user)
                 .build();
         return serviceRepository.save(createService);
     }
@@ -35,11 +33,6 @@ public class CustomServiceService {
         if (existingService.isPresent()) {
             CustomService serviceToDelete = existingService.get();
 
-            if (serviceToDelete.getUser().equals(user)) {
-                serviceRepository.deleteById(id);
-            } else {
-                throw new UnauthorizedException("You are not the owner of this service.");
-            }
         } else {
             throw new NotFoundException("Record doesn't exist.");
         }
@@ -61,7 +54,6 @@ public class CustomServiceService {
         if (existingService.isPresent()) {
             CustomService serviceToUpdate = existingService.get();
 
-            if (serviceToUpdate.getUser().equals(user)) {
 
                 if (updatedService.getName() != null) {
                     serviceToUpdate.setName(updatedService.getName());
@@ -76,9 +68,7 @@ public class CustomServiceService {
                 }
 
                 return serviceRepository.save(serviceToUpdate);
-            } else {
-                throw new UnauthorizedException("You are not the owner of this service.");
-            }
+
         } else {
             throw new NotFoundException("Record doesn't exist.");
         }
