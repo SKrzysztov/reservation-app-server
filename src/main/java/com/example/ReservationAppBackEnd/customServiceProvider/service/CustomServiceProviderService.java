@@ -61,18 +61,38 @@ public class CustomServiceProviderService {
         if (optionalServiceProvider.isPresent()) {
             CustomServiceProvider serviceProvider = optionalServiceProvider.get();
 
-            // Aktualizacja danych dostawcy usług
-            serviceProvider.setName(serviceProviderRequest.name());
-            Address updatedAddress = addressService.updateAddress(serviceProvider.getAddress().getId(), serviceProviderRequest.address());
-            serviceProvider.setAddress(updatedAddress);
+            if (userService.getLoggedUser() == serviceProvider.getUser()) {
+                // Tworzenie nowego obiektu dostawcy usług z istniejącymi danymi
+                CustomServiceProvider updatedServiceProvider = CustomServiceProvider.builder()
+                        .id(serviceProvider.getId())
+                        .name(serviceProviderRequest.name())
+                        .address(serviceProvider.getAddress())  // Tutaj adres pozostaje taki sam
+                        .user(serviceProvider.getUser())
+                        .statusCustomServiceProvider(serviceProvider.getStatusCustomServiceProvider())
+                        .customServiceCategory(serviceProvider.getCustomServiceCategory())
+                        .build();
 
-            return customServiceProviderRepository.save(serviceProvider);
+                // Aktualizacja danych dostawcy usług
+                return customServiceProviderRepository.save(updatedServiceProvider);
+            } else {
+                throw new RuntimeException("You have no access to do it");
+            }
         } else {
             throw new RuntimeException("ServiceProvider not found with id: " + id);
         }
     }
 
+
     public void deleteServiceProvider(Long id) {
-        customServiceProviderRepository.deleteById(id);
+        Optional<CustomServiceProvider> optionalServiceProvider = customServiceProviderRepository.findById(id);
+        if (optionalServiceProvider.isPresent()) {
+            CustomServiceProvider serviceProvider = optionalServiceProvider.get();
+            if(userService.getLoggedUser() == serviceProvider.getUser()) {
+                customServiceProviderRepository.deleteById(id);
+            }
+        }
+        else {
+            throw new RuntimeException("ServiceProvider not found with id: " + id);
+        }
     }
 }

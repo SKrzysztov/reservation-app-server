@@ -1,7 +1,10 @@
 package com.example.ReservationAppBackEnd.user.service;
 
+import com.example.ReservationAppBackEnd.error.NotFoundException;
+import com.example.ReservationAppBackEnd.error.UnauthorizedException;
 import com.example.ReservationAppBackEnd.security.ApplicationUserDetails;
 import com.example.ReservationAppBackEnd.security.TokenProvider;
+import com.example.ReservationAppBackEnd.user.api.ChangePasswordRequest;
 import com.example.ReservationAppBackEnd.user.api.RegisterRequest;
 import com.example.ReservationAppBackEnd.user.domain.Role;
 import com.example.ReservationAppBackEnd.user.domain.User;
@@ -65,7 +68,21 @@ public class UserService {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         return tokenProvider.generate(authentication);
     }
+    public void changePassword(Long userId, ChangePasswordRequest changePasswordRequest) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User not found with id: " + userId));
 
+        // Sprawdź aktualne hasło
+        if (!passwordEncoder.matches(changePasswordRequest.getCurrentPassword(), user.getPassword())) {
+            throw new UnauthorizedException("Current password is incorrect.");
+        }
+
+        // Ustaw nowe hasło
+        user.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
+
+        // Zapisz użytkownika
+        userRepository.save(user);
+    }
     public User lockAccount(String login) {
         Optional<User> existingUser = findUserByLogin(login);
 

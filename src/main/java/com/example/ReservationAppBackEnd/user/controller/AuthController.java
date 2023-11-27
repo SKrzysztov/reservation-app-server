@@ -1,6 +1,7 @@
 package com.example.ReservationAppBackEnd.user.controller;
 
 
+import com.example.ReservationAppBackEnd.user.api.ChangePasswordRequest;
 import com.example.ReservationAppBackEnd.user.api.LoginRequest;
 import com.example.ReservationAppBackEnd.user.api.LoginResponse;
 import com.example.ReservationAppBackEnd.user.api.RegisterRequest;
@@ -31,6 +32,13 @@ public class AuthController {
     public void lockAccount(){
         User user = userService.getLoggedUser();
         userService.lockAccount(user.getLogin());
+    }
+    @PutMapping("/{userId}/change-password")
+    public ResponseEntity<Void> changePassword(
+            @PathVariable Long userId,
+            @RequestBody ChangePasswordRequest changePasswordRequest) {
+        userService.changePassword(userId, changePasswordRequest);
+        return ResponseEntity.ok().build();
     }
 
     @ResponseStatus(HttpStatus.CREATED)
