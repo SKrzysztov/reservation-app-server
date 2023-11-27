@@ -3,6 +3,8 @@ package com.example.ReservationAppBackEnd.customServiceCategory.service;
 import com.example.ReservationAppBackEnd.customServiceCategory.domain.CustomServiceCategory;
 import com.example.ReservationAppBackEnd.customServiceCategory.repository.CustomServiceCategoryRepository;
 import com.example.ReservationAppBackEnd.customServiceCategory.api.CustomServiceCategoryRequest;
+import com.example.ReservationAppBackEnd.error.NotFoundException;
+import com.example.ReservationAppBackEnd.user.domain.Role;
 import com.example.ReservationAppBackEnd.user.domain.User;
 import com.example.ReservationAppBackEnd.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -27,10 +29,13 @@ public class CustomServiceCategoryService {
     public Optional<CustomServiceCategory> getCategoryById(Long id) {
         return customServiceCategoryRepository.findById(id);
     }
-
+    public CustomServiceCategory getExistingCategoryById(Long categoryId) {
+        return customServiceCategoryRepository.findById(categoryId)
+                .orElseThrow(() -> new NotFoundException("Category not found with id: " + categoryId));
+    }
     public CustomServiceCategory createCategory(CustomServiceCategoryRequest categoryRequest) {
         User user = userService.getLoggedUser();
-        if(user.getRole().equals("ADMIN")) {
+        if(user.getRole().equals(Role.ADMIN)) {
             CustomServiceCategory category = CustomServiceCategory.builder()
                     .name(categoryRequest.name())
                     .build();

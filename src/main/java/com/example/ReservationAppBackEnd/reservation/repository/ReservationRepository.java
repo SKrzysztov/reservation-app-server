@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
- List<Reservation> findByServiceProviderAndTimeRange(
-         CustomServiceProvider serviceProvider, LocalDateTime startTime, LocalDateTime endTime);
+ List<Reservation> findByServiceProviderAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(
+         CustomServiceProvider serviceProvider, LocalDateTime endTime, LocalDateTime startTime);
 }

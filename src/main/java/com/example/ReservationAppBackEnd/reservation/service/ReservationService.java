@@ -70,7 +70,7 @@ public class ReservationService {
         LocalDateTime startTime = reservationRequest.startTime();
         LocalDateTime endTime = reservationRequest.endTime();
 
-        List<Reservation> existingReservations = reservationRepository.findByServiceProviderAndTimeRange(
+        List<Reservation> existingReservations = reservationRepository.findByServiceProviderAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(
                 reservationRequest.serviceProvider(), startTime, endTime);
 
         // Sprawdź, czy istnieją kolizje z istniejącymi rezerwacjami

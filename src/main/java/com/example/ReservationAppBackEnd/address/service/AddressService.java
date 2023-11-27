@@ -32,22 +32,24 @@ public class AddressService {
                 .zipCode(addressRequest.zipCode())
                 .country(addressRequest.country())
                 .build();
+
         return addressRepository.save(address);
     }
 
-    public Address updateAddress(Long addressId, AddressRequest addressRequest) {
-        Optional<Address> optionalAddress = addressRepository.findById(addressId);
+    public Address updateAddress(Long id, AddressRequest addressRequest) {
+        Optional<Address> optionalAddress = addressRepository.findById(id);
 
         if (optionalAddress.isPresent()) {
             Address address = optionalAddress.get();
-            // Aktualizacja danych adresu
             address.setStreet(addressRequest.street());
+            address.setBuildingNumber(addressRequest.buildingNumber());
             address.setCity(addressRequest.city());
-            // Dodaj inne pola do aktualizacji, jeśli są dostępne
+            address.setZipCode(addressRequest.zipCode());
+            address.setCountry(addressRequest.country());
 
             return addressRepository.save(address);
         } else {
-            throw new RuntimeException("Address not found with id: " + addressId);
+            throw new RuntimeException("Address not found with id: " + id);
         }
     }
 
