@@ -3,12 +3,17 @@ package com.example.ReservationAppBackEnd.customServiceProvider.controller;
 import com.example.ReservationAppBackEnd.customServiceProvider.api.CustomServiceProviderRequest;
 import com.example.ReservationAppBackEnd.customServiceProvider.domain.CustomServiceProvider;
 import com.example.ReservationAppBackEnd.customServiceProvider.service.CustomServiceProviderService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -37,7 +42,7 @@ public class CustomServiceProviderController {
 
     @PostMapping("/create")
     public ResponseEntity<CustomServiceProvider> createServiceProvider(
-            @RequestBody CustomServiceProviderRequest serviceProviderRequest) {
+            @RequestBody @Valid CustomServiceProviderRequest serviceProviderRequest) {
         CustomServiceProvider createdServiceProvider = customServiceProviderService.createServiceProvider(serviceProviderRequest, serviceProviderRequest.categoryId());
         return new ResponseEntity<>(createdServiceProvider, HttpStatus.CREATED);
     }
@@ -58,6 +63,15 @@ public class CustomServiceProviderController {
         customServiceProviderService.deleteServiceProvider(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-    // Dodaj inne metody obsługujące inne żądania, jeśli są potrzebne
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
+    }
 }

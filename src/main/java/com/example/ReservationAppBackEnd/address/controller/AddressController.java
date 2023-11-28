@@ -35,11 +35,11 @@ public class AddressController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<Address> createAddress(@RequestBody AddressRequest addressRequest) {
-        Address createdAddress = addressService.createAddress(addressRequest);
-        return new ResponseEntity<>(createdAddress, HttpStatus.CREATED);
-    }
+//    @PostMapping("/create")
+//    public ResponseEntity<Address> createAddress(@RequestBody AddressRequest addressRequest) {
+//        Address createdAddress = addressService.createAddress(addressRequest);
+//        return new ResponseEntity<>(createdAddress, HttpStatus.CREATED);
+//    }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<Address> updateAddress(@PathVariable Long id, @RequestBody AddressRequest addressRequest) {

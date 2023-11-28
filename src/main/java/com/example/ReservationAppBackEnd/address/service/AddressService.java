@@ -3,6 +3,8 @@ package com.example.ReservationAppBackEnd.address.service;
 import com.example.ReservationAppBackEnd.address.api.AddressRequest;
 import com.example.ReservationAppBackEnd.address.domain.Address;
 import com.example.ReservationAppBackEnd.address.repository.AddressRepository;
+import com.example.ReservationAppBackEnd.customServiceProvider.domain.CustomServiceProvider;
+import com.example.ReservationAppBackEnd.customServiceProvider.repository.CustomServiceProviderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +17,7 @@ import java.util.Optional;
 public class AddressService {
 
     private final AddressRepository addressRepository;
-
+    private final CustomServiceProviderRepository customServiceProviderRepository;
     public List<Address> getAllAddresses() {
         return addressRepository.findAll();
     }
@@ -24,15 +26,30 @@ public class AddressService {
         return addressRepository.findById(id);
     }
 
-    public Address createAddress(AddressRequest addressRequest) {
+    public Address createAddress(AddressRequest addressRequest, Long serviceProviderId) {
+        // Sprawdź istnienie dostawcy usług, jeśli jest podane id
+        CustomServiceProvider serviceProvider = null;
+        if (serviceProviderId != null) {
+            serviceProvider = customServiceProviderRepository.findById(serviceProviderId)
+                    .orElseThrow(() -> new RuntimeException("Service provider not found with id: " + serviceProviderId));
+        }
+
+        // Tworzenie adresu
         Address address = Address.builder()
                 .street(addressRequest.street())
                 .buildingNumber(addressRequest.buildingNumber())
                 .city(addressRequest.city())
                 .zipCode(addressRequest.zipCode())
                 .country(addressRequest.country())
+                .serviceProvider(serviceProvider)
                 .build();
 
+        // Przypisanie adresu do dostawcy usług, jeśli dostawca jest dostępny
+        if (serviceProvider != null) {
+            serviceProvider.setAddress(address);
+        }
+
+        // Zapisanie adresu
         return addressRepository.save(address);
     }
 

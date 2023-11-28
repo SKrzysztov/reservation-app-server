@@ -1,5 +1,6 @@
 package com.example.ReservationAppBackEnd.customServiceProvider.service;
 
+import com.example.ReservationAppBackEnd.address.api.AddressRequest;
 import com.example.ReservationAppBackEnd.address.domain.Address;
 import com.example.ReservationAppBackEnd.address.service.AddressService;
 import com.example.ReservationAppBackEnd.customServiceCategory.domain.CustomServiceCategory;
@@ -23,15 +24,16 @@ public class CustomServiceProviderService {
     private final CustomServiceProviderRepository customServiceProviderRepository;
     private final AddressService addressService;
     private final UserService userService;
-    private final CustomServiceCategoryRepository customServiceCategoryRepository; // Dodane pole repozytorium
+    private final CustomServiceCategoryRepository customServiceCategoryRepository;
 
     public CustomServiceProvider createServiceProvider(CustomServiceProviderRequest serviceProviderRequest, Long categoryId) {
-        Address address = addressService.createAddress(serviceProviderRequest.address());
+        AddressRequest addressRequest = serviceProviderRequest.address();
+        Address address = addressService.createAddress(addressRequest, null);
 
         User loggedInUser = userService.getLoggedUser();
-
         CustomServiceCategory category = getExistingCategory(categoryId);
 
+        // Tworzenie dostawcy usług
         CustomServiceProvider serviceProvider = CustomServiceProvider.builder()
                 .name(serviceProviderRequest.name())
                 .address(address)
@@ -39,6 +41,8 @@ public class CustomServiceProviderService {
                 .statusCustomServiceProvider(StatusCustomServiceProvider.WAITING)
                 .customServiceCategory(category)
                 .build();
+
+
         return customServiceProviderRepository.save(serviceProvider);
     }
 
@@ -62,18 +66,33 @@ public class CustomServiceProviderService {
             CustomServiceProvider serviceProvider = optionalServiceProvider.get();
 
             if (userService.getLoggedUser() == serviceProvider.getUser()) {
-                // Tworzenie nowego obiektu dostawcy usług z istniejącymi danymi
+                Address existingAddress = serviceProvider.getAddress();
+
                 CustomServiceProvider updatedServiceProvider = CustomServiceProvider.builder()
                         .id(serviceProvider.getId())
                         .name(serviceProviderRequest.name())
-                        .address(serviceProvider.getAddress())  // Tutaj adres pozostaje taki sam
                         .user(serviceProvider.getUser())
                         .statusCustomServiceProvider(serviceProvider.getStatusCustomServiceProvider())
                         .customServiceCategory(serviceProvider.getCustomServiceCategory())
+                        .address(existingAddress) // Zachowaj aktualny adres
                         .build();
 
-                // Aktualizacja danych dostawcy usług
-                return customServiceProviderRepository.save(updatedServiceProvider);
+                if (serviceProviderRequest.address() != null) {
+                    Address updatedAddress = Address.builder()
+                            .id(existingAddress.getId())
+                            .street(serviceProviderRequest.address().street())
+                            .buildingNumber(serviceProviderRequest.address().buildingNumber())
+                            .city(serviceProviderRequest.address().city())
+                            .zipCode(serviceProviderRequest.address().zipCode())
+                            .country(serviceProviderRequest.address().country())
+                            .build();
+                    updatedServiceProvider.setAddress(updatedAddress);
+                }
+
+                // Zapisanie zaktualizowanego dostawcy usług
+                updatedServiceProvider = customServiceProviderRepository.save(updatedServiceProvider);
+
+                return updatedServiceProvider;
             } else {
                 throw new RuntimeException("You have no access to do it");
             }
@@ -81,6 +100,8 @@ public class CustomServiceProviderService {
             throw new RuntimeException("ServiceProvider not found with id: " + id);
         }
     }
+
+
 
 
     public void deleteServiceProvider(Long id) {
@@ -95,4 +116,5 @@ public class CustomServiceProviderService {
             throw new RuntimeException("ServiceProvider not found with id: " + id);
         }
     }
+
 }

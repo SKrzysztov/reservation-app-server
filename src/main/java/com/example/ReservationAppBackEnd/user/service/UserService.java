@@ -71,17 +71,20 @@ public class UserService {
     public void changePassword(Long userId, ChangePasswordRequest changePasswordRequest) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User not found with id: " + userId));
+        if(user.getId() == getLoggedUser().getId()){
+            if (!passwordEncoder.matches(changePasswordRequest.getCurrentPassword(), user.getPassword())) {
+                throw new UnauthorizedException("Current password is incorrect.");
+            }
 
-        // Sprawdź aktualne hasło
-        if (!passwordEncoder.matches(changePasswordRequest.getCurrentPassword(), user.getPassword())) {
-            throw new UnauthorizedException("Current password is incorrect.");
+            // Ustaw nowe hasło
+            user.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
+            // Zapisz użytkownika
+            userRepository.save(user);
+        }
+        else{
+            throw new UnauthorizedException("nie masz autoryzacji do zmiany hasla");
         }
 
-        // Ustaw nowe hasło
-        user.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
-
-        // Zapisz użytkownika
-        userRepository.save(user);
     }
     public User lockAccount(String login) {
         Optional<User> existingUser = findUserByLogin(login);

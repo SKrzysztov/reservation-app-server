@@ -3,16 +3,30 @@ package com.example.ReservationAppBackEnd.customServiceCategory.controller;
 import com.example.ReservationAppBackEnd.customServiceCategory.api.CustomServiceCategoryRequest;
 import com.example.ReservationAppBackEnd.customServiceCategory.domain.CustomServiceCategory;
 import com.example.ReservationAppBackEnd.customServiceCategory.service.CustomServiceCategoryService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 @RestController
 @RequestMapping("/api/customServiceCategory")
+@Validated
 public class CustomServiceCategoryController {
 
     private final CustomServiceCategoryService customServiceCategoryService;
@@ -36,15 +50,16 @@ public class CustomServiceCategoryController {
     }
 
     @PostMapping("/create")
+
     public ResponseEntity<CustomServiceCategory> createCategory(
-            @RequestBody CustomServiceCategoryRequest categoryRequest) {
+             @RequestBody @Valid CustomServiceCategoryRequest categoryRequest) {
         CustomServiceCategory createdCategory = customServiceCategoryService.createCategory(categoryRequest);
         return new ResponseEntity<>(createdCategory, HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<CustomServiceCategory> updateCategory(
-            @PathVariable Long id, @RequestBody CustomServiceCategoryRequest categoryRequest) {
+            @PathVariable Long id, @RequestBody @Valid CustomServiceCategoryRequest categoryRequest) {
         try {
             CustomServiceCategory updatedCategory = customServiceCategoryService.updateCategory(id, categoryRequest);
             return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
@@ -58,6 +73,16 @@ public class CustomServiceCategoryController {
         customServiceCategoryService.deleteCategory(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
+    }
     // Dodaj inne metody obsługujące inne żądania, jeśli są potrzebne
 }

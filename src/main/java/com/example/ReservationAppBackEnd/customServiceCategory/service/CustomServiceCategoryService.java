@@ -29,10 +29,8 @@ public class CustomServiceCategoryService {
     public Optional<CustomServiceCategory> getCategoryById(Long id) {
         return customServiceCategoryRepository.findById(id);
     }
-    public CustomServiceCategory getExistingCategoryById(Long categoryId) {
-        return customServiceCategoryRepository.findById(categoryId)
-                .orElseThrow(() -> new NotFoundException("Category not found with id: " + categoryId));
-    }
+
+
     public CustomServiceCategory createCategory(CustomServiceCategoryRequest categoryRequest) {
         User user = userService.getLoggedUser();
         if(user.getRole().equals(Role.ADMIN)) {
@@ -42,7 +40,7 @@ public class CustomServiceCategoryService {
             return customServiceCategoryRepository.save(category);
         }
         else {
-            throw new RuntimeException("xd");
+            throw new RuntimeException("You are not authorize to create Category");
         }
     }
 
@@ -51,7 +49,7 @@ public class CustomServiceCategoryService {
 
         if (optionalCategory.isPresent()) {
             User user = userService.getLoggedUser();
-            if(user.getRole().equals("ADMIN")) {
+            if(user.getRole().equals(Role.ADMIN)) {
             CustomServiceCategory category = optionalCategory.get();
             category.setName(categoryRequest.name());
 
@@ -70,7 +68,7 @@ public class CustomServiceCategoryService {
 
         if (optionalCategory.isPresent()) {
             User user = userService.getLoggedUser();
-            if (user.getRole().equals("ADMIN")) {
+            if (user.getRole().equals(Role.ADMIN)) {
                 customServiceCategoryRepository.deleteById(id);
             } else {
                 throw new RuntimeException("Category not found with id: " + id);
