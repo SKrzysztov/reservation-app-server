@@ -34,6 +34,7 @@ public class CustomServiceService {
         CustomService createService = CustomService.builder()
                 .name(customServiceRequest.name())
                 .description(customServiceRequest.description())
+                .price(customServiceRequest.price())
                 .status(CustomServiceStatus.AVAILABLE)  // Dostosuj status według potrzeb
                 .serviceProvider(serviceProvider)
                 .build();

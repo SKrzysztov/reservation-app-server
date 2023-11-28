@@ -79,5 +79,4 @@ public class CustomServiceCategoryService {
         }
 
     }
-            // Dodaj inne metody związane z operacjami CRUD na kategoriach usług, jeśli są potrzebne
 }

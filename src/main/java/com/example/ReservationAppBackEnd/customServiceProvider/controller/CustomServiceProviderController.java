@@ -2,6 +2,7 @@ package com.example.ReservationAppBackEnd.customServiceProvider.controller;
 
 import com.example.ReservationAppBackEnd.customServiceProvider.api.CustomServiceProviderRequest;
 import com.example.ReservationAppBackEnd.customServiceProvider.domain.CustomServiceProvider;
+import com.example.ReservationAppBackEnd.customServiceProvider.filter.CustomServiceProviderFilter;
 import com.example.ReservationAppBackEnd.customServiceProvider.service.CustomServiceProviderService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +64,12 @@ public class CustomServiceProviderController {
         customServiceProviderService.deleteServiceProvider(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+    @GetMapping("/filter")
+    public ResponseEntity<List<CustomServiceProvider>> filter(@RequestBody CustomServiceProviderFilter filter) {
+        List<CustomServiceProvider> filteredProviders = customServiceProviderService.filter(filter);
+        return new ResponseEntity<>(filteredProviders, HttpStatus.OK);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {

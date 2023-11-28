@@ -11,7 +11,6 @@ import java.util.Collection;
 @Getter
 public class ApplicationUserDetails implements UserDetails {
 
-//    private UUID id;
     private String login;
     private String password;
     private String firstName;

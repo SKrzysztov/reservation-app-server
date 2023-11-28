@@ -30,6 +30,8 @@ public class CustomService {
     @Enumerated
     private CustomServiceStatus status;
 
+    private float price;
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "service_provider_id")

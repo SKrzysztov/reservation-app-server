@@ -24,8 +24,4 @@ public class Address {
     private String zipCode;
     private String country;
 
-    @JsonIgnore
-    @OneToOne
-    @JoinColumn(name = "service_provider_id")
-    private CustomServiceProvider serviceProvider;
 }

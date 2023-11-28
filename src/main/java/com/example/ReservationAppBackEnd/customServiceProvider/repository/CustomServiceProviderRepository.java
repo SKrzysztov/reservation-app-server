@@ -9,4 +9,8 @@ import java.util.List;
 @Repository
 public interface CustomServiceProviderRepository extends JpaRepository<CustomServiceProvider, Long> {
     List<CustomServiceProvider> findByCustomServiceCategoryName(String categoryName);
+
+    List<CustomServiceProvider> findByAddressCity(String city);
+
+    List<CustomServiceProvider> findByCustomServiceCategoryNameAndAddressCity(String categoryName, String city);
 }

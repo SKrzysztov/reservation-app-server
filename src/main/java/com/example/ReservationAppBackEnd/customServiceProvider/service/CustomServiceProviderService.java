@@ -7,6 +7,7 @@ import com.example.ReservationAppBackEnd.customServiceCategory.domain.CustomServ
 import com.example.ReservationAppBackEnd.customServiceCategory.repository.CustomServiceCategoryRepository;
 import com.example.ReservationAppBackEnd.customServiceProvider.domain.CustomServiceProvider;
 import com.example.ReservationAppBackEnd.customServiceProvider.domain.StatusCustomServiceProvider;
+import com.example.ReservationAppBackEnd.customServiceProvider.filter.CustomServiceProviderFilter;
 import com.example.ReservationAppBackEnd.customServiceProvider.repository.CustomServiceProviderRepository;
 import com.example.ReservationAppBackEnd.customServiceProvider.api.CustomServiceProviderRequest;
 import com.example.ReservationAppBackEnd.user.domain.User;
@@ -33,7 +34,6 @@ public class CustomServiceProviderService {
         User loggedInUser = userService.getLoggedUser();
         CustomServiceCategory category = getExistingCategory(categoryId);
 
-        // Tworzenie dostawcy usług
         CustomServiceProvider serviceProvider = CustomServiceProvider.builder()
                 .name(serviceProviderRequest.name())
                 .address(address)
@@ -67,29 +67,26 @@ public class CustomServiceProviderService {
 
             if (userService.getLoggedUser() == serviceProvider.getUser()) {
                 Address existingAddress = serviceProvider.getAddress();
+                AddressRequest newAddressRequest = serviceProviderRequest.address();
+
+                // Aktualizuj pola adresu, jeśli zostały podane w żądaniu
+                if (newAddressRequest != null) {
+                    existingAddress.setStreet(newAddressRequest.street() != null ? newAddressRequest.street() : existingAddress.getStreet());
+                    existingAddress.setBuildingNumber(newAddressRequest.buildingNumber() != 0 ? newAddressRequest.buildingNumber() : existingAddress.getBuildingNumber());
+                    existingAddress.setCity(newAddressRequest.city() != null ? newAddressRequest.city() : existingAddress.getCity());
+                    existingAddress.setZipCode(newAddressRequest.zipCode() != null ? newAddressRequest.zipCode() : existingAddress.getZipCode());
+                    existingAddress.setCountry(newAddressRequest.country() != null ? newAddressRequest.country() : existingAddress.getCountry());
+                }
 
                 CustomServiceProvider updatedServiceProvider = CustomServiceProvider.builder()
                         .id(serviceProvider.getId())
-                        .name(serviceProviderRequest.name())
+                        .name(serviceProviderRequest.name() != null ? serviceProviderRequest.name() : serviceProvider.getName())
                         .user(serviceProvider.getUser())
                         .statusCustomServiceProvider(serviceProvider.getStatusCustomServiceProvider())
                         .customServiceCategory(serviceProvider.getCustomServiceCategory())
-                        .address(existingAddress) // Zachowaj aktualny adres
+                        .address(existingAddress)
                         .build();
 
-                if (serviceProviderRequest.address() != null) {
-                    Address updatedAddress = Address.builder()
-                            .id(existingAddress.getId())
-                            .street(serviceProviderRequest.address().street())
-                            .buildingNumber(serviceProviderRequest.address().buildingNumber())
-                            .city(serviceProviderRequest.address().city())
-                            .zipCode(serviceProviderRequest.address().zipCode())
-                            .country(serviceProviderRequest.address().country())
-                            .build();
-                    updatedServiceProvider.setAddress(updatedAddress);
-                }
-
-                // Zapisanie zaktualizowanego dostawcy usług
                 updatedServiceProvider = customServiceProviderRepository.save(updatedServiceProvider);
 
                 return updatedServiceProvider;
@@ -100,6 +97,11 @@ public class CustomServiceProviderService {
             throw new RuntimeException("ServiceProvider not found with id: " + id);
         }
     }
+
+    public CustomServiceProvider saveServiceProvider(CustomServiceProvider serviceProvider) {
+        return customServiceProviderRepository.save(serviceProvider);
+    }
+
 
 
 
@@ -116,5 +118,15 @@ public class CustomServiceProviderService {
             throw new RuntimeException("ServiceProvider not found with id: " + id);
         }
     }
-
+    public List<CustomServiceProvider> filter(CustomServiceProviderFilter filter) {
+        if (filter.getCategoryName() != null && filter.getCity() != null) {
+            return customServiceProviderRepository.findByCustomServiceCategoryNameAndAddressCity(filter.getCategoryName(), filter.getCity());
+        } else if (filter.getCategoryName() != null) {
+            return customServiceProviderRepository.findByCustomServiceCategoryName(filter.getCategoryName());
+        } else if (filter.getCity() != null) {
+            return customServiceProviderRepository.findByAddressCity(filter.getCity());
+        } else {
+            return customServiceProviderRepository.findAll();
+        }
+    }
 }

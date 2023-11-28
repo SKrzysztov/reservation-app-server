@@ -84,5 +84,4 @@ public class CustomServiceCategoryController {
         });
         return errors;
     }
-    // Dodaj inne metody obsługujące inne żądania, jeśli są potrzebne
 }

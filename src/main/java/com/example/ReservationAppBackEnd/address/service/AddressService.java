@@ -41,7 +41,6 @@ public class AddressService {
                 .city(addressRequest.city())
                 .zipCode(addressRequest.zipCode())
                 .country(addressRequest.country())
-                .serviceProvider(serviceProvider)
                 .build();
 
         // Przypisanie adresu do dostawcy usług, jeśli dostawca jest dostępny

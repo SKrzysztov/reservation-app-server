@@ -50,4 +50,17 @@ public class CustomServiceProvider {
     @Enumerated
     private StatusCustomServiceProvider statusCustomServiceProvider;
 
+    private double averageOpinion;
+    public void recalculateAverageOpinion() {
+        if (comments != null && !comments.isEmpty()) {
+            double averageRating = comments.stream()
+                    .mapToDouble(Comment::getOpinion)
+                    .average()
+                    .orElse(0.0);
+
+            setAverageOpinion(averageRating);
+        } else {
+            setAverageOpinion(0.0);
+        }
+    }
 }

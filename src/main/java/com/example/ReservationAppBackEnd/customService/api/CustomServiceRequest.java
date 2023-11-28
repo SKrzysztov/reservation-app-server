@@ -15,5 +15,6 @@ public record CustomServiceRequest (
     @NotBlank
     String description,
 
+    Float price,
     Long serviceProviderId
 ){}
