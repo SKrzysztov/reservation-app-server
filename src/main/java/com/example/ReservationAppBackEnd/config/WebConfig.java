@@ -20,6 +20,7 @@ public class WebConfig {
                 registry.addMapping("/**")
                         .allowedMethods("*")
                         .allowedOrigins(corsUrl);
+
             }
         };
     }

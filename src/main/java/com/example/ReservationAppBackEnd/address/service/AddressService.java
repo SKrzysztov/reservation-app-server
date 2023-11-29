@@ -27,14 +27,12 @@ public class AddressService {
     }
 
     public Address createAddress(AddressRequest addressRequest, Long serviceProviderId) {
-        // Sprawdź istnienie dostawcy usług, jeśli jest podane id
         CustomServiceProvider serviceProvider = null;
         if (serviceProviderId != null) {
             serviceProvider = customServiceProviderRepository.findById(serviceProviderId)
                     .orElseThrow(() -> new RuntimeException("Service provider not found with id: " + serviceProviderId));
         }
 
-        // Tworzenie adresu
         Address address = Address.builder()
                 .street(addressRequest.street())
                 .buildingNumber(addressRequest.buildingNumber())
@@ -43,12 +41,10 @@ public class AddressService {
                 .country(addressRequest.country())
                 .build();
 
-        // Przypisanie adresu do dostawcy usług, jeśli dostawca jest dostępny
         if (serviceProvider != null) {
             serviceProvider.setAddress(address);
         }
 
-        // Zapisanie adresu
         return addressRepository.save(address);
     }
 

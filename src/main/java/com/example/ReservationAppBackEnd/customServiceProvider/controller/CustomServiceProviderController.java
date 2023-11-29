@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins = "${app.cors.url}")
 @RequestMapping("/api/customServiceProvider")
 public class CustomServiceProviderController {
 
