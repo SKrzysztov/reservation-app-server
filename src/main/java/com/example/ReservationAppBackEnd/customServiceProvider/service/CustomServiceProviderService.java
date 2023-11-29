@@ -1,7 +1,6 @@
 package com.example.ReservationAppBackEnd.customServiceProvider.service;
 
 import com.example.ReservationAppBackEnd.address.api.AddressRequest;
-import com.example.ReservationAppBackEnd.address.domain.Address;
 import com.example.ReservationAppBackEnd.address.service.AddressService;
 import com.example.ReservationAppBackEnd.customServiceCategory.domain.CustomServiceCategory;
 import com.example.ReservationAppBackEnd.customServiceCategory.repository.CustomServiceCategoryRepository;
@@ -10,6 +9,7 @@ import com.example.ReservationAppBackEnd.customServiceProvider.domain.StatusCust
 import com.example.ReservationAppBackEnd.customServiceProvider.filter.CustomServiceProviderFilter;
 import com.example.ReservationAppBackEnd.customServiceProvider.repository.CustomServiceProviderRepository;
 import com.example.ReservationAppBackEnd.customServiceProvider.api.CustomServiceProviderRequest;
+import com.example.ReservationAppBackEnd.error.NotFoundException;
 import com.example.ReservationAppBackEnd.user.domain.User;
 import com.example.ReservationAppBackEnd.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -100,6 +100,10 @@ public class CustomServiceProviderService {
 
     public CustomServiceProvider saveServiceProvider(CustomServiceProvider serviceProvider) {
         return customServiceProviderRepository.save(serviceProvider);
+    }
+    public CustomServiceProvider getExistingServiceProvider(Long serviceProviderId) {
+        Optional<CustomServiceProvider> serviceProvider = customServiceProviderRepository.findById(serviceProviderId);
+        return serviceProvider.orElseThrow(() -> new NotFoundException("Service provider not found with id: " + serviceProviderId));
     }
 
 

@@ -6,6 +6,7 @@ import com.example.ReservationAppBackEnd.customService.domein.CustomServiceStatu
 import com.example.ReservationAppBackEnd.customService.repository.CustomServiceRepository;
 import com.example.ReservationAppBackEnd.customServiceProvider.domain.CustomServiceProvider;
 import com.example.ReservationAppBackEnd.customServiceProvider.repository.CustomServiceProviderRepository;
+import com.example.ReservationAppBackEnd.customServiceProvider.service.CustomServiceProviderService;
 import com.example.ReservationAppBackEnd.error.NotFoundException;
 import com.example.ReservationAppBackEnd.error.UnauthorizedException;
 import com.example.ReservationAppBackEnd.user.domain.User;
@@ -24,9 +25,10 @@ public class CustomServiceService {
     private final CustomServiceRepository serviceRepository;
     private final CustomServiceProviderRepository serviceProviderRepository;
     private final UserService userService;
+    private final CustomServiceProviderService customServiceProviderService;
 
     public CustomService createService(@Valid CustomServiceRequest customServiceRequest) {
-        CustomServiceProvider serviceProvider = getExistingServiceProvider(customServiceRequest.serviceProviderId());
+        CustomServiceProvider serviceProvider = customServiceProviderService.getExistingServiceProvider(customServiceRequest.serviceProviderId());
         if (!userService.getLoggedUser().equals(serviceProvider.getUser())) {
             throw new UnauthorizedException("You are not authorized to create a service for this provider.");
         }
@@ -117,8 +119,5 @@ public class CustomServiceService {
         throw new NotFoundException("Record doesn't exist.");
     }
 
-    private CustomServiceProvider getExistingServiceProvider(Long serviceProviderId) {
-        Optional<CustomServiceProvider> serviceProvider = serviceProviderRepository.findById(serviceProviderId);
-        return serviceProvider.orElseThrow(() -> new NotFoundException("Service provider not found with id: " + serviceProviderId));
-    }
+
 }

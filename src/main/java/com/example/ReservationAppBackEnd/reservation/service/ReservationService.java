@@ -21,17 +21,20 @@ public class ReservationService {
 
     @Autowired
     private ReservationRepository reservationRepository;
-
     public Reservation createReservation(User user, ReservationRequest reservationRequest) {
-        CustomServiceProvider serviceProvider = reservationRequest.serviceProvider();
-        Reservation reservation = Reservation.builder()
-                .user(user)
-                .serviceProvider(serviceProvider)
-                .startTime(reservationRequest.startTime())
-                .endTime(reservationRequest.endTime())
-                .build();
+        if (hasCollisions(reservationRequest)) {
+            throw new RuntimeException("Kolizje z istniejącymi rezerwacjami.");
+        }else {
+            CustomServiceProvider serviceProvider = reservationRequest.serviceProvider();
+            Reservation reservation = Reservation.builder()
+                    .user(user)
+                    .serviceProvider(serviceProvider)
+                    .startTime(reservationRequest.startTime())
+                    .endTime(reservationRequest.endTime())
+                    .build();
 
-        return reservationRepository.save(reservation);
+            return reservationRepository.save(reservation);
+        }
     }
 
     public void deleteReservation(User user, Long id) {
@@ -40,7 +43,6 @@ public class ReservationService {
         if (existingReservation.isPresent()) {
             Reservation reservationToDelete = existingReservation.get();
 
-            // Sprawdzenie, czy użytkownik jest właścicielem rezerwacji
             if (!user.equals(reservationToDelete.getUser())) {
                 throw new UnauthorizedException("You are not authorized to delete this reservation.");
             }

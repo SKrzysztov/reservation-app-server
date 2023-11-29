@@ -13,4 +13,5 @@ public interface CustomServiceProviderRepository extends JpaRepository<CustomSer
     List<CustomServiceProvider> findByAddressCity(String city);
 
     List<CustomServiceProvider> findByCustomServiceCategoryNameAndAddressCity(String categoryName, String city);
+
 }

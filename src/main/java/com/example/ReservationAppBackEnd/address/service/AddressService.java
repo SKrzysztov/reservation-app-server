@@ -1,12 +1,10 @@
 package com.example.ReservationAppBackEnd.address.service;
 
 import com.example.ReservationAppBackEnd.address.api.AddressRequest;
-import com.example.ReservationAppBackEnd.address.domain.Address;
 import com.example.ReservationAppBackEnd.address.repository.AddressRepository;
 import com.example.ReservationAppBackEnd.customServiceProvider.domain.CustomServiceProvider;
 import com.example.ReservationAppBackEnd.customServiceProvider.repository.CustomServiceProviderRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
