@@ -1,11 +1,13 @@
 package com.example.ReservationAppBackEnd.customServiceProvider.domain;
 
 
+import com.example.ReservationAppBackEnd.address.domain.Address;
 import com.example.ReservationAppBackEnd.comment.domain.Comment;
 import com.example.ReservationAppBackEnd.customService.domein.CustomService;
 import com.example.ReservationAppBackEnd.customServiceCategory.domain.CustomServiceCategory;
 import com.example.ReservationAppBackEnd.reservation.domain.Reservation;
 import com.example.ReservationAppBackEnd.user.domain.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 

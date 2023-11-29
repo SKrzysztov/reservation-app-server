@@ -1,6 +1,7 @@
 package com.example.ReservationAppBackEnd.address.controller;
 
 import com.example.ReservationAppBackEnd.address.api.AddressRequest;
+import com.example.ReservationAppBackEnd.address.domain.Address;
 import com.example.ReservationAppBackEnd.address.service.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

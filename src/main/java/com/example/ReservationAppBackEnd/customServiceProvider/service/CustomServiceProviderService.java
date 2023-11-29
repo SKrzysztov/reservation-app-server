@@ -1,6 +1,7 @@
 package com.example.ReservationAppBackEnd.customServiceProvider.service;
 
 import com.example.ReservationAppBackEnd.address.api.AddressRequest;
+import com.example.ReservationAppBackEnd.address.domain.Address;
 import com.example.ReservationAppBackEnd.address.service.AddressService;
 import com.example.ReservationAppBackEnd.customServiceCategory.domain.CustomServiceCategory;
 import com.example.ReservationAppBackEnd.customServiceCategory.repository.CustomServiceCategoryRepository;
