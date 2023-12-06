@@ -1,5 +1,6 @@
 package com.example.ReservationAppBackEnd.reservation.controller;
 
+import com.example.ReservationAppBackEnd.customService.service.CustomServiceService;
 import com.example.ReservationAppBackEnd.reservation.api.ReservationRequest;
 import com.example.ReservationAppBackEnd.reservation.domain.Reservation;
 import com.example.ReservationAppBackEnd.reservation.service.ReservationService;
@@ -24,6 +25,8 @@ public class ReservationController {
 
     private final ReservationService reservationService;
     private final UserService userService;
+    private final CustomServiceService serviceService;
+
     @PostMapping("/create")
     public ResponseEntity<Reservation> createReservation(
             @RequestBody @Valid ReservationRequest reservationRequest) {

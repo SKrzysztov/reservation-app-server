@@ -18,9 +18,9 @@ public class AddressService {
 
     private final AddressRepository addressRepository;
     private final CustomServiceProviderRepository customServiceProviderRepository;
-    public List<Address> getAllAddresses() {
-        return addressRepository.findAll();
-    }
+//    public List<Address> getAllAddresses() {
+//        return addressRepository.findAll();
+//    }
 
     public Optional<Address> getAddressById(Long id) {
         return addressRepository.findById(id);

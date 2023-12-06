@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.Duration;
 import java.util.List;
 
 @Table(name = "services")
@@ -36,5 +37,7 @@ public class CustomService {
     @ManyToOne
     @JoinColumn(name = "service_provider_id")
     private CustomServiceProvider serviceProvider;
+
+    private Duration duration;
 
 }

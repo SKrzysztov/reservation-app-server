@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 
+import java.time.Duration;
+
 @Builder
 public record CustomServiceRequest (
 
@@ -16,5 +18,6 @@ public record CustomServiceRequest (
     String description,
 
     Float price,
-    Long serviceProviderId
+    Long serviceProviderId,
+    Duration duration
 ){}

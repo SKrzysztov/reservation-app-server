@@ -12,12 +12,11 @@ import java.time.LocalDateTime;
 
 @Builder
 public record ReservationRequest(
-        @NotNull(message = "Service provider cannot be null")
-        @Valid
-        CustomServiceProvider serviceProvider,
+        Long serviceProviderId,
         @NotNull(message = "Start time cannot be null")
         LocalDateTime startTime,
-        @NotNull(message = "End time cannot be null")
-        LocalDateTime endTime
+
+        @NotNull(message = "service ")
+        Long serviceId
 ) {
 }
