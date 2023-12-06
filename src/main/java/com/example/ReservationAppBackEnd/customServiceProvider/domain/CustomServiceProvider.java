@@ -5,6 +5,7 @@ import com.example.ReservationAppBackEnd.address.domain.Address;
 import com.example.ReservationAppBackEnd.comment.domain.Comment;
 import com.example.ReservationAppBackEnd.customService.domein.CustomService;
 import com.example.ReservationAppBackEnd.customServiceCategory.domain.CustomServiceCategory;
+import com.example.ReservationAppBackEnd.image.domain.Image;
 import com.example.ReservationAppBackEnd.reservation.domain.Reservation;
 import com.example.ReservationAppBackEnd.user.domain.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -43,6 +44,8 @@ public class CustomServiceProvider {
 
     @OneToMany(mappedBy = "serviceProvider", cascade = CascadeType.ALL)
     private List<Reservation> reservations;
+
+
 
     @ManyToOne(optional = false)
     private User user;

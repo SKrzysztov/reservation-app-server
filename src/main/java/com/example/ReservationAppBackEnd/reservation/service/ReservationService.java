@@ -9,6 +9,7 @@ import com.example.ReservationAppBackEnd.reservation.repository.ReservationRepos
 import com.example.ReservationAppBackEnd.user.domain.User;
 import com.example.ReservationAppBackEnd.error.NotFoundException;
 import com.example.ReservationAppBackEnd.error.UnauthorizedException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,9 +22,12 @@ public class ReservationService {
 
     @Autowired
     private ReservationRepository reservationRepository;
+
+
+    @Transactional
     public Reservation createReservation(User user, ReservationRequest reservationRequest) {
         if (hasCollisions(reservationRequest)) {
-            throw new RuntimeException("Kolizje z istniejącymi rezerwacjami.");
+            throw new RuntimeException("Collision with other reservation");
         }else {
             CustomServiceProvider serviceProvider = reservationRequest.serviceProvider();
             Reservation reservation = Reservation.builder()
@@ -74,8 +78,6 @@ public class ReservationService {
 
         List<Reservation> existingReservations = reservationRepository.findByServiceProviderAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(
                 reservationRequest.serviceProvider(), startTime, endTime);
-
-        // Sprawdź, czy istnieją kolizje z istniejącymi rezerwacjami
         return existingReservations.stream()
                 .anyMatch(existing ->
                         startTime.isBefore(existing.getEndTime()) && endTime.isAfter(existing.getStartTime()));

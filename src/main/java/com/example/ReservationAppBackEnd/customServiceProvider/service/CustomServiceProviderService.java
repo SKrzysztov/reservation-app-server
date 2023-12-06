@@ -14,6 +14,7 @@ import com.example.ReservationAppBackEnd.error.NotFoundException;
 import com.example.ReservationAppBackEnd.user.domain.User;
 import com.example.ReservationAppBackEnd.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,9 +29,10 @@ public class CustomServiceProviderService {
     private final UserService userService;
     private final CustomServiceCategoryRepository customServiceCategoryRepository;
 
+
     public CustomServiceProvider createServiceProvider(CustomServiceProviderRequest serviceProviderRequest, Long categoryId) {
         AddressRequest addressRequest = serviceProviderRequest.address();
-        Address address = addressService.createAddress(addressRequest, null);
+        Address address = addressService.createAddress(addressRequest);
 
         User loggedInUser = userService.getLoggedUser();
         CustomServiceCategory category = getExistingCategory(categoryId);
@@ -110,7 +112,6 @@ public class CustomServiceProviderService {
 
 
 
-
     public void deleteServiceProvider(Long id) {
         Optional<CustomServiceProvider> optionalServiceProvider = customServiceProviderRepository.findById(id);
         if (optionalServiceProvider.isPresent()) {
@@ -133,5 +134,8 @@ public class CustomServiceProviderService {
         } else {
             return customServiceProviderRepository.findAll();
         }
+    }
+    public void setAvailableCustomServiceProvider(Long customServiceProviderId){
+
     }
 }
