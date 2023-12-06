@@ -72,7 +72,6 @@ public class CustomServiceProviderService {
                 Address existingAddress = serviceProvider.getAddress();
                 AddressRequest newAddressRequest = serviceProviderRequest.address();
 
-                // Aktualizuj pola adresu, jeśli zostały podane w żądaniu
                 if (newAddressRequest != null) {
                     existingAddress.setStreet(newAddressRequest.street() != null ? newAddressRequest.street() : existingAddress.getStreet());
                     existingAddress.setBuildingNumber(newAddressRequest.buildingNumber() != 0 ? newAddressRequest.buildingNumber() : existingAddress.getBuildingNumber());

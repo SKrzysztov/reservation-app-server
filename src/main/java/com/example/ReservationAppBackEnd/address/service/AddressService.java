@@ -17,10 +17,9 @@ import java.util.Optional;
 public class AddressService {
 
     private final AddressRepository addressRepository;
-    private final CustomServiceProviderRepository customServiceProviderRepository;
-//    public List<Address> getAllAddresses() {
-//        return addressRepository.findAll();
-//    }
+    public List<Address> getAllAddresses() {
+        return addressRepository.findAll();
+    }
 
     public Optional<Address> getAddressById(Long id) {
         return addressRepository.findById(id);
@@ -38,24 +37,23 @@ public class AddressService {
         return addressRepository.save(address);
     }
 
-//    public Address updateAddress(Long id, AddressRequest addressRequest) {
-//        Optional<Address> optionalAddress = addressRepository.findById(id);
-//
-//        if (optionalAddress.isPresent()) {
-//            Address address = optionalAddress.get();
-//            address.setStreet(addressRequest.street());
-//            address.setBuildingNumber(addressRequest.buildingNumber());
-//            address.setCity(addressRequest.city());
-//            address.setZipCode(addressRequest.zipCode());
-//            address.setCountry(addressRequest.country());
-//
-//            return addressRepository.save(address);
-//        } else {
-//            throw new RuntimeException("Address not found with id: " + id);
-//        }
-//    }
-//
-//    public void deleteAddress(Long id) {
-//        addressRepository.deleteById(id);
-//    }
+    public Address updateAddress(Long id, AddressRequest addressRequest) {
+        Optional<Address> optionalAddress = addressRepository.findById(id);
+
+        if (optionalAddress.isPresent()) {
+            Address address = optionalAddress.get();
+            address.setStreet(addressRequest.street());
+            address.setBuildingNumber(addressRequest.buildingNumber());
+            address.setCity(addressRequest.city());
+            address.setZipCode(addressRequest.zipCode());
+            address.setCountry(addressRequest.country());
+            return addressRepository.save(address);
+        } else {
+            throw new RuntimeException("Address not found with id: " + id);
+        }
+    }
+
+    public void deleteAddress(Long id) {
+        addressRepository.deleteById(id);
+    }
 }
