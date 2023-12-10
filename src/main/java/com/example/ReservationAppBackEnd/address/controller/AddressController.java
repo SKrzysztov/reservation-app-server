@@ -28,13 +28,6 @@ public class AddressController {
         return new ResponseEntity<>(addresses, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Address> getAddressById(@PathVariable Long id) {
-        Optional<Address> address = addressService.getAddressById(id);
-        return address.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
-
 //    @PostMapping("/create")
 //    public ResponseEntity<Address> createAddress(@RequestBody AddressRequest addressRequest) {
 //        Address createdAddress = addressService.createAddress(addressRequest);

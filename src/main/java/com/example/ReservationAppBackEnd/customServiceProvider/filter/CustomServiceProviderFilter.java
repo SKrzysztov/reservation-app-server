@@ -10,5 +10,6 @@ import lombok.Setter;
 public class CustomServiceProviderFilter {
     private String categoryName;
     private String city;
+    private String country;
 
 }

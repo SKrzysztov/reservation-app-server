@@ -13,7 +13,6 @@ public interface CustomServiceProviderRepository extends JpaRepository<CustomSer
     List<CustomServiceProvider> findByAddressCity(String city);
     List<CustomServiceProvider> findByAddressCountry(String country);
 
-
     List<CustomServiceProvider> findByCustomServiceCategoryNameAndAddressCity(String categoryName, String city);
 
     List<CustomServiceProvider> findByCustomServiceCategoryNameAndAddressCityAndAddressCountry(String categoryName, String City, String Country);

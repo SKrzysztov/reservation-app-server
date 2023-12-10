@@ -35,12 +35,12 @@ public class CustomServiceProviderController {
         return new ResponseEntity<>(serviceProviders, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CustomServiceProvider> getServiceProviderById(@PathVariable Long id) {
-        Optional<CustomServiceProvider> serviceProvider = customServiceProviderService.getServiceProviderById(id);
-        return serviceProvider.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
+//    @GetMapping("/{id}")
+//    public ResponseEntity<CustomServiceProvider> getServiceProviderById(@PathVariable Long id) {
+//        Optional<CustomServiceProvider> serviceProvider = customServiceProviderService.getServiceProviderById(id);
+//        return serviceProvider.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+//                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+//    }
 
     @PostMapping("/create")
     public ResponseEntity<CustomServiceProvider> createServiceProvider(
@@ -65,11 +65,11 @@ public class CustomServiceProviderController {
         customServiceProviderService.deleteServiceProvider(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    @GetMapping("/filter")
-    public ResponseEntity<List<CustomServiceProvider>> filter(@RequestBody CustomServiceProviderFilter filter) {
-        List<CustomServiceProvider> filteredProviders = customServiceProviderService.filter(filter);
-        return new ResponseEntity<>(filteredProviders, HttpStatus.OK);
-    }
+//    @GetMapping("/filter")
+//    public ResponseEntity<List<CustomServiceProvider>> filter(@RequestBody CustomServiceProviderFilter filter) {
+//        List<CustomServiceProvider> filteredProviders = customServiceProviderService.filter(filter);
+//        return new ResponseEntity<>(filteredProviders, HttpStatus.OK);
+//    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

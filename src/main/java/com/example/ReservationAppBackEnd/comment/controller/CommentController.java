@@ -29,5 +29,4 @@ public class CommentController {
         return new ResponseEntity<>(createdComment, HttpStatus.CREATED);
     }
 
-    // Dodaj inne metody obsługujące inne żądania, jeśli są potrzebne
 }

@@ -1,5 +1,6 @@
 package com.example.ReservationAppBackEnd.reservation.domain;
 
+import com.example.ReservationAppBackEnd.customService.domein.CustomService;
 import com.example.ReservationAppBackEnd.customServiceProvider.domain.CustomServiceProvider;
 import com.example.ReservationAppBackEnd.user.domain.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -29,6 +30,10 @@ public class Reservation {
     @ManyToOne
     @JoinColumn(name = "service_provider_id")
     private CustomServiceProvider serviceProvider;
+
+    @ManyToOne
+    @JoinColumn(name = "service_id")
+    private CustomService service;
 
     private LocalDateTime startTime;
     private LocalDateTime endTime;

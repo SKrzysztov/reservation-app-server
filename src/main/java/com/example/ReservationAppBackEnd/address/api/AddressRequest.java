@@ -21,6 +21,5 @@ public record AddressRequest(
         String zipCode,
         @NotEmpty(message = "Country cannot be empty")
         String country
-
 ) {
 }

@@ -32,7 +32,6 @@ public class CustomServiceService {
         if (!userService.getLoggedUser().equals(serviceProvider.getUser())) {
             throw new UnauthorizedException("You are not authorized to create a service for this provider.");
         }
-
         CustomService createService = CustomService.builder()
                 .name(customServiceRequest.name())
                 .description(customServiceRequest.description())
@@ -49,7 +48,6 @@ public class CustomServiceService {
         if (existingService.isPresent()) {
             CustomService serviceToDelete = existingService.get();
 
-            // Sprawdzenie, czy użytkownik jest właścicielem dostawcy usług
             CustomServiceProvider serviceProvider = serviceToDelete.getServiceProvider();
             if (!user.equals(serviceProvider.getUser())) {
                 throw new UnauthorizedException("You are not authorized to delete this service.");
@@ -77,7 +75,6 @@ public class CustomServiceService {
         if (existingService.isPresent()) {
             CustomService serviceToUpdate = existingService.get();
 
-            // Sprawdzenie, czy użytkownik jest właścicielem dostawcy usług
             CustomServiceProvider serviceProvider = serviceToUpdate.getServiceProvider();
             if (!user.equals(serviceProvider.getUser())) {
                 throw new UnauthorizedException("You are not authorized to update this service.");

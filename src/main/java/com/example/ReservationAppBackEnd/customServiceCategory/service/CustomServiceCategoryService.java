@@ -4,6 +4,7 @@ import com.example.ReservationAppBackEnd.customServiceCategory.domain.CustomServ
 import com.example.ReservationAppBackEnd.customServiceCategory.repository.CustomServiceCategoryRepository;
 import com.example.ReservationAppBackEnd.customServiceCategory.api.CustomServiceCategoryRequest;
 import com.example.ReservationAppBackEnd.error.NotFoundException;
+import com.example.ReservationAppBackEnd.error.UnauthorizedException;
 import com.example.ReservationAppBackEnd.user.domain.Role;
 import com.example.ReservationAppBackEnd.user.domain.User;
 import com.example.ReservationAppBackEnd.user.service.UserService;
@@ -26,10 +27,10 @@ public class CustomServiceCategoryService {
         return customServiceCategoryRepository.findAll();
     }
 
-    public Optional<CustomServiceCategory> getCategoryById(Long id) {
-        return customServiceCategoryRepository.findById(id);
+    public CustomServiceCategory getExistingCategory(Long categoryId) {
+        Optional<CustomServiceCategory> category = customServiceCategoryRepository.findById(categoryId);
+        return category.orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));
     }
-
 
     public CustomServiceCategory createCategory(CustomServiceCategoryRequest categoryRequest) {
         User user = userService.getLoggedUser();
@@ -40,7 +41,7 @@ public class CustomServiceCategoryService {
             return customServiceCategoryRepository.save(category);
         }
         else {
-            throw new RuntimeException("You are not authorize to create Category");
+            throw new UnauthorizedException("You are not authorize to create Category");
         }
     }
 
@@ -49,17 +50,17 @@ public class CustomServiceCategoryService {
 
         if (optionalCategory.isPresent()) {
             User user = userService.getLoggedUser();
-            if(user.getRole().equals(Role.ADMIN)) {
-            CustomServiceCategory category = optionalCategory.get();
-            category.setName(categoryRequest.name());
 
-            return customServiceCategoryRepository.save(category);
+            if(user.getRole().equals(Role.ADMIN)) {
+                CustomServiceCategory category = optionalCategory.get();
+                category.setName(categoryRequest.name());
+                return customServiceCategoryRepository.save(category);
         } else {
-                throw new RuntimeException("Category not found with id: " + id);
+                throw new UnauthorizedException("Category not found with id: " + id);
             }
         }
             else {
-            throw new RuntimeException("Category not found with id: " + id);
+            throw new NotFoundException("Category not found with id: " + id);
         }
     }
 

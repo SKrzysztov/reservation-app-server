@@ -10,6 +10,7 @@ import com.example.ReservationAppBackEnd.user.domain.Role;
 import com.example.ReservationAppBackEnd.user.domain.User;
 import com.example.ReservationAppBackEnd.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -28,7 +29,10 @@ public class UserService {
     private final AuthenticationManager authenticationManager;
     private final TokenProvider tokenProvider;
     private final UserValidator userValidator;
-
+    public boolean isUserLoggedIn() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication != null && authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken);
+    }
 
     public User getLoggedUser() {
         String login = Optional.ofNullable(SecurityContextHolder.getContext())
@@ -71,7 +75,7 @@ public class UserService {
     public void changePassword(Long userId, ChangePasswordRequest changePasswordRequest) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User not found with id: " + userId));
-        if(user.getId() == getLoggedUser().getId()){
+        if(user.getId().equals(getLoggedUser().getId())){
             if (!passwordEncoder.matches(changePasswordRequest.getCurrentPassword(), user.getPassword())) {
                 throw new UnauthorizedException("Current password is incorrect.");
             }
@@ -99,4 +103,5 @@ public class UserService {
 
         return null;
     }
+
 }

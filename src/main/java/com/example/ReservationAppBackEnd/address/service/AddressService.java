@@ -5,6 +5,8 @@ import com.example.ReservationAppBackEnd.address.domain.Address;
 import com.example.ReservationAppBackEnd.address.repository.AddressRepository;
 import com.example.ReservationAppBackEnd.customServiceProvider.domain.CustomServiceProvider;
 import com.example.ReservationAppBackEnd.customServiceProvider.repository.CustomServiceProviderRepository;
+import com.example.ReservationAppBackEnd.error.NotFoundException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,15 +19,17 @@ import java.util.Optional;
 public class AddressService {
 
     private final AddressRepository addressRepository;
+
     public List<Address> getAllAddresses() {
         return addressRepository.findAll();
     }
 
-    public Optional<Address> getAddressById(Long id) {
-        return addressRepository.findById(id);
+    public Address getAddressById(Long id) {
+        return addressRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Address not found"));
     }
 
-    public Address createAddress(AddressRequest addressRequest) {
+    public Address createAddress(@Valid AddressRequest addressRequest) {
         Address address = Address.builder()
                 .street(addressRequest.street())
                 .buildingNumber(addressRequest.buildingNumber())
@@ -33,27 +37,26 @@ public class AddressService {
                 .zipCode(addressRequest.zipCode())
                 .country(addressRequest.country())
                 .build();
-
         return addressRepository.save(address);
     }
 
-    public Address updateAddress(Long id, AddressRequest addressRequest) {
-        Optional<Address> optionalAddress = addressRepository.findById(id);
-
-        if (optionalAddress.isPresent()) {
-            Address address = optionalAddress.get();
-            address.setStreet(addressRequest.street());
-            address.setBuildingNumber(addressRequest.buildingNumber());
-            address.setCity(addressRequest.city());
-            address.setZipCode(addressRequest.zipCode());
-            address.setCountry(addressRequest.country());
-            return addressRepository.save(address);
+    public Address updateAddress(Long id, @Valid AddressRequest addressRequest) {
+        if (!addressRepository.existsById(id)) {
+            throw new NotFoundException("Address not found");
         } else {
-            throw new RuntimeException("Address not found with id: " + id);
+            Address existingAddress = getAddressById(id);
+            existingAddress.setStreet(addressRequest.street());
+            existingAddress.setBuildingNumber(addressRequest.buildingNumber());
+            existingAddress.setCity(addressRequest.city());
+            existingAddress.setZipCode(addressRequest.zipCode());
+            existingAddress.setCountry(addressRequest.country());
+            return addressRepository.save(existingAddress);
         }
     }
-
     public void deleteAddress(Long id) {
+        if (!addressRepository.existsById(id)) {
+            throw new NotFoundException("Address not found");
+        }
         addressRepository.deleteById(id);
     }
 }
