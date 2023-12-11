@@ -16,7 +16,6 @@ import com.example.ReservationAppBackEnd.user.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -40,7 +39,7 @@ public class ReservationService {
             throw new UnauthorizedException("you must login");
         }
         User user = userService.getLoggedUser();
-        CustomServiceProvider serviceProvider = customServiceProviderService.getExistingServiceProvider(reservationRequest.serviceProviderId());
+        CustomServiceProvider serviceProvider = customServiceProviderService.getServiceProvider(reservationRequest.serviceProviderId());
         CustomService service = customServiceService.getServiceById(reservationRequest.serviceId());
         Reservation reservation = Reservation.builder()
                 .user(user)

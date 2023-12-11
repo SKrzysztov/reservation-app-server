@@ -3,13 +3,10 @@ package com.example.ReservationAppBackEnd.customServiceProvider.service;
 import com.example.ReservationAppBackEnd.address.api.AddressRequest;
 import com.example.ReservationAppBackEnd.address.domain.Address;
 import com.example.ReservationAppBackEnd.address.service.AddressService;
-import com.example.ReservationAppBackEnd.customServiceCategory.api.CustomServiceCategoryRequest;
 import com.example.ReservationAppBackEnd.customServiceCategory.domain.CustomServiceCategory;
-import com.example.ReservationAppBackEnd.customServiceCategory.repository.CustomServiceCategoryRepository;
 import com.example.ReservationAppBackEnd.customServiceCategory.service.CustomServiceCategoryService;
 import com.example.ReservationAppBackEnd.customServiceProvider.domain.CustomServiceProvider;
 import com.example.ReservationAppBackEnd.customServiceProvider.domain.StatusCustomServiceProvider;
-import com.example.ReservationAppBackEnd.customServiceProvider.filter.CustomServiceProviderFilter;
 import com.example.ReservationAppBackEnd.customServiceProvider.repository.CustomServiceProviderRepository;
 import com.example.ReservationAppBackEnd.customServiceProvider.api.CustomServiceProviderRequest;
 import com.example.ReservationAppBackEnd.error.NotFoundException;
@@ -19,7 +16,6 @@ import com.example.ReservationAppBackEnd.user.domain.User;
 import com.example.ReservationAppBackEnd.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,6 +31,9 @@ public class CustomServiceProviderService {
     private final CustomServiceCategoryService customServiceCategoryService;
     public CustomServiceProvider saveServiceProvider(CustomServiceProvider serviceProvider) {
         return customServiceProviderRepository.save(serviceProvider);
+    }
+    public List<CustomServiceProvider> getAllServiceProviders() {
+        return customServiceProviderRepository.findAll();
     }
 
     public CustomServiceProvider createServiceProvider(@Valid CustomServiceProviderRequest serviceProviderRequest, Long categoryId) {
@@ -57,10 +56,23 @@ public class CustomServiceProviderService {
     }
 
 
-    public List<CustomServiceProvider> getAllServiceProviders() {
-        return customServiceProviderRepository.findAll();
+    public List<CustomServiceProvider> getAllWaitingCustomServiceProviders() {
+        if (!userService.isUserLoggedIn()) {
+            throw new UnauthorizedException("You are not authorize to create Category");
+        }
+        User user = userService.getLoggedUser();
+        if (user.getRole().equals(Role.ADMIN)) {
+
+            return customServiceProviderRepository.findAllByStatusCustomServiceProvider("WAITING");
+        } else {
+            throw new UnauthorizedException("You are not authorize to search waiting serviceproviders");
+        }
     }
-    public CustomServiceProvider getExistingServiceProvider(Long serviceProviderId) {
+
+    public List<CustomServiceProvider> getAllAvailableCustomServiceProviders() {
+        return customServiceProviderRepository.findAllByStatusCustomServiceProvider("AVAILABLE");
+    }
+    public CustomServiceProvider getServiceProvider(Long serviceProviderId) {
         Optional<CustomServiceProvider> serviceProvider = customServiceProviderRepository.findById(serviceProviderId);
         return serviceProvider.orElseThrow(() -> new NotFoundException("Service provider not found with id: " + serviceProviderId));
     }
@@ -115,7 +127,7 @@ public class CustomServiceProviderService {
         }
         User user = userService.getLoggedUser();
         if(user.getRole().equals(Role.ADMIN)) {
-            CustomServiceProvider serviceProvider = getExistingServiceProvider(id);
+            CustomServiceProvider serviceProvider = getServiceProvider(id);
             serviceProvider.setStatusCustomServiceProvider(StatusCustomServiceProvider.AVAILABLE);
         }
         else {

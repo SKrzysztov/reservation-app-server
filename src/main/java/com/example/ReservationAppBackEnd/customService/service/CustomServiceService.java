@@ -29,7 +29,7 @@ public class CustomServiceService {
     private final CustomServiceProviderService customServiceProviderService;
 
     public CustomService createService(@Valid CustomServiceRequest customServiceRequest) {
-        CustomServiceProvider serviceProvider = customServiceProviderService.getExistingServiceProvider(customServiceRequest.serviceProviderId());
+        CustomServiceProvider serviceProvider = customServiceProviderService.getServiceProvider(customServiceRequest.serviceProviderId());
         if (!userService.getLoggedUser().equals(serviceProvider.getUser())) {
             throw new UnauthorizedException("You are not authorized to create a service for this provider.");
         }

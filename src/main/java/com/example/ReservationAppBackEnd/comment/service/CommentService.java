@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
@@ -43,7 +42,7 @@ public class CommentService {
             throw new UnauthorizedException("You are not logged in");
         } else {
             User user = userService.getLoggedUser();
-            CustomServiceProvider serviceProvider = customServiceProviderService.getExistingServiceProvider(commentRequest.serviceProviderId());
+            CustomServiceProvider serviceProvider = customServiceProviderService.getServiceProvider(commentRequest.serviceProviderId());
             Comment comment = Comment.builder()
                     .user(user)
                     .serviceProvider(serviceProvider)
