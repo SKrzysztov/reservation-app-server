@@ -15,6 +15,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,6 +39,7 @@ public class CustomServiceService {
                 .price(customServiceRequest.price())
                 .status(CustomServiceStatus.AVAILABLE)  // Dostosuj status według potrzeb
                 .serviceProvider(serviceProvider)
+                .duration(Duration.ofMinutes(customServiceRequest.durationInMinutes()))
                 .build();
         return serviceRepository.save(createService);
     }

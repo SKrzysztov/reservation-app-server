@@ -6,9 +6,13 @@ import com.example.ReservationAppBackEnd.user.domain.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+
+
+
 
 @Entity
 @Table(name = "reservations")
@@ -35,7 +39,10 @@ public class Reservation {
     @JoinColumn(name = "service_id")
     private CustomService service;
 
+    @JsonFormat(pattern = "yy-MM-dd HH:mm")
     private LocalDateTime startTime;
+
+    @JsonFormat(pattern = "yy-MM-dd HH:mm")
     private LocalDateTime endTime;
 
 }

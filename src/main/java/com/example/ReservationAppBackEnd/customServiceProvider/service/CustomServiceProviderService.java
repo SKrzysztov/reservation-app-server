@@ -3,6 +3,7 @@ package com.example.ReservationAppBackEnd.customServiceProvider.service;
 import com.example.ReservationAppBackEnd.address.api.AddressRequest;
 import com.example.ReservationAppBackEnd.address.domain.Address;
 import com.example.ReservationAppBackEnd.address.service.AddressService;
+import com.example.ReservationAppBackEnd.customServiceCategory.api.CustomServiceCategoryRequest;
 import com.example.ReservationAppBackEnd.customServiceCategory.domain.CustomServiceCategory;
 import com.example.ReservationAppBackEnd.customServiceCategory.repository.CustomServiceCategoryRepository;
 import com.example.ReservationAppBackEnd.customServiceCategory.service.CustomServiceCategoryService;
@@ -13,6 +14,7 @@ import com.example.ReservationAppBackEnd.customServiceProvider.repository.Custom
 import com.example.ReservationAppBackEnd.customServiceProvider.api.CustomServiceProviderRequest;
 import com.example.ReservationAppBackEnd.error.NotFoundException;
 import com.example.ReservationAppBackEnd.error.UnauthorizedException;
+import com.example.ReservationAppBackEnd.user.domain.Role;
 import com.example.ReservationAppBackEnd.user.domain.User;
 import com.example.ReservationAppBackEnd.user.service.UserService;
 import jakarta.validation.Valid;
@@ -77,24 +79,47 @@ public class CustomServiceProviderService {
     public CustomServiceProvider updateServiceProvider(Long id, @Valid CustomServiceProviderRequest serviceProviderRequest) {
         CustomServiceProvider serviceProvider = customServiceProviderRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Service Provider not found"));
+
         User loggedInUser = userService.getLoggedUser();
         if (!loggedInUser.equals(serviceProvider.getUser())) {
-            throw new UnauthorizedException("You are not allowed to delete this Service Provider");
+            throw new UnauthorizedException("You are not allowed to update this Service Provider");
         }
 
+        String newName = serviceProviderRequest.name();
         AddressRequest addressRequest = serviceProviderRequest.address();
-        Address updatedAddress = addressService.updateAddress(serviceProvider.getAddress().getId(), addressRequest);
 
-        serviceProvider.setName(serviceProviderRequest.name());
-        serviceProvider.setAddress(updatedAddress);
+        if (newName != null && !newName.equals(serviceProvider.getName())) {
+            serviceProvider.setName(newName);
+        }
+
+        if (addressRequest != null) {
+            Address updatedAddress = addressService.updateAddress(serviceProvider.getAddress().getId(), addressRequest);
+            serviceProvider.setAddress(updatedAddress);
+        }
 
         Long newCategoryId = serviceProviderRequest.categoryId();
-        Long currentCategoryId = serviceProvider.getCustomServiceCategory().getId();
+        if (newCategoryId != null) {
+            Long currentCategoryId = serviceProvider.getCustomServiceCategory().getId();
 
-        if (newCategoryId != null && !newCategoryId.equals(currentCategoryId)) {
-            serviceProvider.setCustomServiceCategory(customServiceCategoryService.getExistingCategory(newCategoryId));
+            if (!newCategoryId.equals(currentCategoryId)) {
+                serviceProvider.setCustomServiceCategory(customServiceCategoryService.getExistingCategory(newCategoryId));
+            }
         }
 
         return customServiceProviderRepository.save(serviceProvider);
+    }
+
+    public void setCustomServiceProviderAvailable(Long id) {
+        if(!userService.isUserLoggedIn()){
+            throw new UnauthorizedException("You are not authorize to create Category");
+        }
+        User user = userService.getLoggedUser();
+        if(user.getRole().equals(Role.ADMIN)) {
+            CustomServiceProvider serviceProvider = getExistingServiceProvider(id);
+            serviceProvider.setStatusCustomServiceProvider(StatusCustomServiceProvider.AVAILABLE);
+        }
+        else {
+            throw new UnauthorizedException("You are not authorize to create Category");
+        }
     }
 }

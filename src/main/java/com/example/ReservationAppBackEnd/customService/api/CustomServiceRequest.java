@@ -19,5 +19,5 @@ public record CustomServiceRequest (
 
     Float price,
     Long serviceProviderId,
-    Duration duration
+    Long durationInMinutes
 ){}

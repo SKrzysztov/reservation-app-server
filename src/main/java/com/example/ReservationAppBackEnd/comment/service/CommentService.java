@@ -16,6 +16,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,6 +47,7 @@ public class CommentService {
             Comment comment = Comment.builder()
                     .user(user)
                     .serviceProvider(serviceProvider)
+                    .addedTime(LocalDateTime.now())
                     .content(commentRequest.content())
                     .opinion(commentRequest.opinion())
                     .build();

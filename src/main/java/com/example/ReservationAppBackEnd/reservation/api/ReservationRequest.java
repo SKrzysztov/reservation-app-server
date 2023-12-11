@@ -1,5 +1,6 @@
 package com.example.ReservationAppBackEnd.reservation.api;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -14,9 +15,8 @@ import java.time.LocalDateTime;
 public record ReservationRequest(
         Long serviceProviderId,
         @NotNull(message = "Start time cannot be null")
+        @JsonFormat(pattern = "yy-MM-dd HH:mm")
         LocalDateTime startTime,
-
-        @NotNull(message = "service ")
         Long serviceId
 ) {
 }

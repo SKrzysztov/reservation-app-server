@@ -30,10 +30,9 @@ public class ReservationController {
     @PostMapping("/create")
     public ResponseEntity<Reservation> createReservation(
             @RequestBody @Valid ReservationRequest reservationRequest) {
-        User user = userService.getLoggedUser();
-        Reservation createdReservation = reservationService.createReservation(user, reservationRequest);
+        Reservation createdReservation = reservationService.createReservation(reservationRequest);
         return new ResponseEntity<>(createdReservation, HttpStatus.CREATED);
-    }
+   }
 
     @GetMapping("/{id}")
     public ResponseEntity<Reservation> getReservationById(@PathVariable Long id) {

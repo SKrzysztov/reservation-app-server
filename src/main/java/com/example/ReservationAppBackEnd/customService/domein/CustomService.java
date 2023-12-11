@@ -5,14 +5,14 @@ import com.example.ReservationAppBackEnd.customServiceProvider.domain.CustomServ
 import com.example.ReservationAppBackEnd.reservation.domain.Reservation;
 import com.example.ReservationAppBackEnd.user.domain.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Duration;
 import java.util.List;
-
-@Table(name = "services")
 @Entity
+@Table(name = "customServices")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -40,4 +40,8 @@ public class CustomService {
 
     private Duration duration;
 
+    @JsonProperty("durationInMinutes")
+    public Long getDurationInMinutes() {
+        return duration.toMinutes();
+    }
 }

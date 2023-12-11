@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "comment")
 @Builder
@@ -22,11 +24,13 @@ public class Comment {
     @JoinColumn(name = "user_id")
     private User user;
 
+    private LocalDateTime addedTime;
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "service_provider_id")
     private CustomServiceProvider serviceProvider;
     private String content;
+
 
     private int opinion;
 }

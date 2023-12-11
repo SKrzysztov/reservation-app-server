@@ -5,10 +5,8 @@ import com.example.ReservationAppBackEnd.address.domain.Address;
 import com.example.ReservationAppBackEnd.comment.domain.Comment;
 import com.example.ReservationAppBackEnd.customService.domein.CustomService;
 import com.example.ReservationAppBackEnd.customServiceCategory.domain.CustomServiceCategory;
-import com.example.ReservationAppBackEnd.image.domain.Image;
 import com.example.ReservationAppBackEnd.reservation.domain.Reservation;
 import com.example.ReservationAppBackEnd.user.domain.User;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,8 +30,7 @@ public class CustomServiceProvider {
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
 
-    @OneToMany(mappedBy = "serviceProvider", cascade = CascadeType.ALL)
-    private List<CustomService> servicesOffered;
+
 
     @OneToOne
     @JoinColumn(name = "category_id")
@@ -45,7 +42,8 @@ public class CustomServiceProvider {
     @OneToMany(mappedBy = "serviceProvider", cascade = CascadeType.ALL)
     private List<Reservation> reservations;
 
-
+    @OneToMany(mappedBy = "serviceProvider", cascade = CascadeType.ALL)
+    private List<CustomService> customServices;
 
     @ManyToOne(optional = false)
     private User user;

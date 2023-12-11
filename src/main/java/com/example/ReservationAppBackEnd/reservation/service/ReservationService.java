@@ -12,7 +12,9 @@ import com.example.ReservationAppBackEnd.reservation.repository.ReservationRepos
 import com.example.ReservationAppBackEnd.user.domain.User;
 import com.example.ReservationAppBackEnd.error.NotFoundException;
 import com.example.ReservationAppBackEnd.error.UnauthorizedException;
+import com.example.ReservationAppBackEnd.user.service.UserService;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
@@ -23,31 +25,33 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class ReservationService {
 
     @Autowired
-    private ReservationRepository reservationRepository;
-    private CustomServiceProviderService customServiceProviderService;
-    private CustomServiceService customServiceService;
+    private final ReservationRepository reservationRepository;
+    private final CustomServiceProviderService customServiceProviderService;
+    private final UserService userService;
+    private final CustomServiceService customServiceService;
 
     @Transactional
-    public Reservation createReservation(User user, ReservationRequest reservationRequest) {
+    public Reservation createReservation(ReservationRequest reservationRequest) {
+        if(!userService.isUserLoggedIn()){
+            throw new UnauthorizedException("you must login");
+        }
+        User user = userService.getLoggedUser();
         CustomServiceProvider serviceProvider = customServiceProviderService.getExistingServiceProvider(reservationRequest.serviceProviderId());
         CustomService service = customServiceService.getServiceById(reservationRequest.serviceId());
-//        if (hasCollisions(reservationRequest)) {
-//            throw new RuntimeException("Collision with other reservation");
-//        }else
-//        {
-            Reservation reservation = Reservation.builder()
-                    .user(user)
-                    .serviceProvider(serviceProvider)
-                    .startTime(reservationRequest.startTime())
-                    .endTime(calculateEndTimeOfReservation(reservationRequest.startTime(),service.getDuration()))
-                    .build();
-
+        Reservation reservation = Reservation.builder()
+                .user(user)
+                .service(service)
+                .serviceProvider(serviceProvider)
+                .startTime(reservationRequest.startTime())
+                .endTime(calculateEndTimeOfReservation(reservationRequest.startTime(),service.getDuration()))
+                .build();
             return reservationRepository.save(reservation);
         }
-//    }
+
 
     public void deleteReservation(User user, Long id) {
         Optional<Reservation> existingReservation = reservationRepository.findById(id);
@@ -78,18 +82,12 @@ public class ReservationService {
     public List<Reservation> getAllReservations() {
         return reservationRepository.findAll();
     }
-    private LocalDateTime calculateEndTimeOfReservation(LocalDateTime startTime, Duration duration){
+    private LocalDateTime calculateEndTimeOfReservation(LocalDateTime startTime, Duration duration) {
+        if (startTime == null || duration == null) {
+            throw new IllegalArgumentException("Invalid input: startTime or duration cannot be null");
+        }
         return startTime.plus(duration);
     }
 
-//    private boolean hasCollisions(ReservationRequest reservationRequest) {
-//        LocalDateTime startTime = reservationRequest.startTime();
-//        LocalDateTime endTime = reservationRequest.endTime();
-//
-//        List<Reservation> existingReservations = reservationRepository.findByServiceProviderAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(
-//                reservationRequest.serviceProvider(), startTime, endTime);
-//        return existingReservations.stream()
-//                .anyMatch(existing ->
-//                        startTime.isBefore(existing.getEndTime()) && endTime.isAfter(existing.getStartTime()));
-//    }
+
 }
