@@ -5,6 +5,7 @@ import com.example.ReservationAppBackEnd.address.domain.Address;
 import com.example.ReservationAppBackEnd.comment.domain.Comment;
 import com.example.ReservationAppBackEnd.customService.domein.CustomService;
 import com.example.ReservationAppBackEnd.customServiceCategory.domain.CustomServiceCategory;
+import com.example.ReservationAppBackEnd.image.domain.Image;
 import com.example.ReservationAppBackEnd.reservation.domain.Reservation;
 import com.example.ReservationAppBackEnd.user.domain.User;
 import jakarta.persistence.*;
@@ -48,6 +49,10 @@ public class CustomServiceProvider {
     @ManyToOne(optional = false)
     private User user;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id", referencedColumnName = "id")
+    private Image image;
+
     @Enumerated
     private StatusCustomServiceProvider statusCustomServiceProvider;
 
@@ -58,7 +63,6 @@ public class CustomServiceProvider {
                     .mapToDouble(Comment::getOpinion)
                     .average()
                     .orElse(0.0);
-
             setAverageOpinion(averageRating);
         } else {
             setAverageOpinion(0.0);

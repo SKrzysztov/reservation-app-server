@@ -14,9 +14,8 @@ import java.io.IOException;
 public class ImageService {
     private final ImageRepository imageRepository;
     public Image saveImage(ImageRequest imageRequest) {
-        // Use the builder to create an instance of Image
         Image image = Image.builder()
-                .data(imageRequest.data())
+                .data(imageRequest.getData())
                 .build();
 
         return imageRepository.save(image);

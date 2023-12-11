@@ -1,9 +1,23 @@
 package com.example.ReservationAppBackEnd.image.api;
 
 import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 @Builder
-public record ImageRequest(
-        byte[] data
-) {
+@Setter
+@Getter
+public class ImageRequest {
+
+    private byte[] data;
+
+    public ImageRequest() {
+    }
+
+    public ImageRequest(byte[] data) {
+        this.data = data;
+    }
+
+
 }
+

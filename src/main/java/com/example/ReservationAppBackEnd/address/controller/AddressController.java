@@ -22,31 +22,5 @@ public class AddressController {
         this.addressService = addressService;
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<Address>> getAllAddresses() {
-        List<Address> addresses = addressService.getAllAddresses();
-        return new ResponseEntity<>(addresses, HttpStatus.OK);
-    }
 
-//    @PostMapping("/create")
-//    public ResponseEntity<Address> createAddress(@RequestBody AddressRequest addressRequest) {
-//        Address createdAddress = addressService.createAddress(addressRequest);
-//        return new ResponseEntity<>(createdAddress, HttpStatus.CREATED);
-//    }
-
-//    @PutMapping("/update/{id}")
-//    public ResponseEntity<Address> updateAddress(@PathVariable Long id, @RequestBody AddressRequest addressRequest) {
-//        try {
-//            Address updatedAddress = addressService.updateAddress(id, addressRequest);
-//            return new ResponseEntity<>(updatedAddress, HttpStatus.OK);
-//        } catch (RuntimeException e) {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//    }
-//
-//    @DeleteMapping("/delete/{id}")
-//    public ResponseEntity<Void> deleteAddress(@PathVariable Long id) {
-//        addressService.deleteAddress(id);
-//        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//    }
 }

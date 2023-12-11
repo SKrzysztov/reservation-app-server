@@ -42,12 +42,11 @@ public class CustomServiceCategoryController {
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
-   // @GetMapping("/{id}")
-//    public ResponseEntity<CustomServiceCategory> getCategoryById(@PathVariable Long id) {
-//        Optional<CustomServiceCategory> category = customServiceCategoryService.getCategoryById(id);
-//        return category.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-//                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
-//    }
+    @GetMapping("/{categoryId}")
+    public ResponseEntity<CustomServiceCategory> getCategoryById(@PathVariable Long categoryId) {
+        CustomServiceCategory category = customServiceCategoryService.getExistingCategory(categoryId);
+        return ResponseEntity.ok(category);
+    }
 
     @PostMapping("/create")
 

@@ -11,6 +11,9 @@ import com.example.ReservationAppBackEnd.customServiceProvider.repository.Custom
 import com.example.ReservationAppBackEnd.customServiceProvider.api.CustomServiceProviderRequest;
 import com.example.ReservationAppBackEnd.error.NotFoundException;
 import com.example.ReservationAppBackEnd.error.UnauthorizedException;
+import com.example.ReservationAppBackEnd.image.api.ImageRequest;
+import com.example.ReservationAppBackEnd.image.domain.Image;
+import com.example.ReservationAppBackEnd.image.service.ImageService;
 import com.example.ReservationAppBackEnd.user.domain.Role;
 import com.example.ReservationAppBackEnd.user.domain.User;
 import com.example.ReservationAppBackEnd.user.service.UserService;
@@ -29,6 +32,7 @@ public class CustomServiceProviderService {
     private final AddressService addressService;
     private final UserService userService;
     private final CustomServiceCategoryService customServiceCategoryService;
+    private final ImageService imageService;
     public CustomServiceProvider saveServiceProvider(CustomServiceProvider serviceProvider) {
         return customServiceProviderRepository.save(serviceProvider);
     }
@@ -134,4 +138,23 @@ public class CustomServiceProviderService {
             throw new UnauthorizedException("You are not authorize to create Category");
         }
     }
+    public CustomServiceProvider addImageToServiceProvider(Long serviceProviderId, ImageRequest imageRequest) {
+        CustomServiceProvider serviceProvider = customServiceProviderRepository.findById(serviceProviderId)
+                .orElseThrow(() -> new RuntimeException("CustomServiceProvider not found with id: " + serviceProviderId));
+
+        Image savedImage = imageService.saveImage(imageRequest);
+        serviceProvider.setImage(savedImage);
+
+        return customServiceProviderRepository.save(serviceProvider);
+    }
+    public CustomServiceProvider updateServiceProviderImage(Long serviceProviderId, ImageRequest imageRequest) {
+        CustomServiceProvider serviceProvider = customServiceProviderRepository.findById(serviceProviderId)
+                .orElseThrow(() -> new RuntimeException("CustomServiceProvider not found with id: " + serviceProviderId));
+
+        Image newImage = imageService.saveImage(imageRequest);
+        serviceProvider.setImage(newImage);
+
+        return customServiceProviderRepository.save(serviceProvider);
+    }
+
 }
