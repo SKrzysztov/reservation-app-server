@@ -27,7 +27,7 @@ public class ApplicationUserDetailsService implements UserDetailsService {
     private ApplicationUserDetails mapToUserDetails(User user) {
         List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(user.getRole().name()));
         return ApplicationUserDetails.builder()
-//                .id(user.id())
+                .id(user.getId())
                 .email(user.getEmail())
                 .login(user.getLogin())
                 .firstName(user.getFirstName())

@@ -35,14 +35,19 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(new LoginResponse(token));
     }
     @PutMapping("/lock")
-    public void lockAccount(){
-        User user = userService.getLoggedUser();
-        userService.lockAccount(user.getLogin());
+    public ResponseEntity<String> lockAccount() {
+        try {
+            User user = userService.getLoggedUser();
+            userService.lockAccount(user.getLogin());
+            return ResponseEntity.ok("Account locked successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error locking the account");
+        }
     }
-    @PutMapping("/{userId}/change-password")
+    @PutMapping("/change-password")
     public ResponseEntity<Void> changePassword(
-            @PathVariable Long userId,
             @RequestBody ChangePasswordRequest changePasswordRequest) {
+        Long userId = userService.getLoggedUser().getId();
         userService.changePassword(userId, changePasswordRequest);
         return ResponseEntity.ok().build();
     }

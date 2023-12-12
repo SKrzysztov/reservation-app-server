@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,5 +20,8 @@ public class ImageService {
                 .build();
 
         return imageRepository.save(image);
+    }
+    public Optional<Image> getImage(Long imageId) {
+        return imageRepository.findById(imageId);
     }
 }

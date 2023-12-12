@@ -56,6 +56,7 @@ public class UserService {
         userValidator.validate(registerRequest);
 
         User registerUser = User.builder()
+                .id(null)
                 .login(registerRequest.login())
                 .password(passwordEncoder.encode(registerRequest.password()))
                 .firstName(registerRequest.firstName())

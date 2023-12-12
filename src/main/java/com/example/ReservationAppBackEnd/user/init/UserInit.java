@@ -37,9 +37,8 @@ public class UserInit implements CommandLineRunner {
                     .lastName("Admin")
                     .password(passwordEncoder.encode("Administrator"))
                     .role(Role.ADMIN)
-                    .accountNonLocked(false)
+                    .accountNonLocked(true)
                     .build();
-
             userRepository.save(admin1);
             userRepository.save(admin2);
         }

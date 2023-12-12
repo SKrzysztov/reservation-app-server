@@ -44,13 +44,14 @@ public class CustomServiceService {
         return serviceRepository.save(createService);
     }
 
-    public void deleteService(User user, Long id) {
+    public void deleteService(Long id) {
         Optional<CustomService> existingService = serviceRepository.findById(id);
 
         if (existingService.isPresent()) {
             CustomService serviceToDelete = existingService.get();
 
             CustomServiceProvider serviceProvider = serviceToDelete.getServiceProvider();
+            User user =userService.getLoggedUser();
             if (!user.equals(serviceProvider.getUser())) {
                 throw new UnauthorizedException("You are not authorized to delete this service.");
             }
@@ -71,12 +72,12 @@ public class CustomServiceService {
         }
     }
 
-    public CustomService updateService(User user, Long id, CustomService updatedService) {
+    public CustomService updateService(Long id, CustomService updatedService) {
         Optional<CustomService> existingService = serviceRepository.findById(id);
 
         if (existingService.isPresent()) {
             CustomService serviceToUpdate = existingService.get();
-
+            User user = userService.getLoggedUser();
             CustomServiceProvider serviceProvider = serviceToUpdate.getServiceProvider();
             if (!user.equals(serviceProvider.getUser())) {
                 throw new UnauthorizedException("You are not authorized to update this service.");

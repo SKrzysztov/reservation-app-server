@@ -39,6 +39,7 @@ public class TokenProvider {
         byte[] signingKey = jwtSecret.getBytes();
 
         ZonedDateTime currentTime = ZonedDateTime.now();
+        log.info("User ID in ApplicationUserDetails: {}", user.getId());
         return Jwts.builder()
                 .setHeaderParam("typ", TOKEN_TYPE)
                 .signWith(Keys.hmacShaKeyFor(signingKey), SignatureAlgorithm.HS512)
@@ -52,6 +53,7 @@ public class TokenProvider {
                 .claim("lastName", user.getLastName())
                 .claim("email", user.getEmail())
                 .claim("roles", roles)
+                .claim("id", user.getId())
                 .compact();
     }
 

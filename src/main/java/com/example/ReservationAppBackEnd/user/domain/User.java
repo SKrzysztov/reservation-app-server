@@ -22,5 +22,4 @@ public class User {
     private boolean accountNonLocked;
     @Enumerated
     Role role;
-
 }

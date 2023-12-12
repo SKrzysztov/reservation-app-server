@@ -17,13 +17,16 @@ public class ApplicationUserDetails implements UserDetails {
     private String lastName;
     private boolean accountNonLocked;
     private String email;
+    private Long id;
     private Collection<? extends GrantedAuthority> authorities;
 
     @Override
     public String getUsername() {
         return login;
     }
-
+    public Long getId() {
+        return id;
+    }
     @Override
     public boolean isAccountNonExpired() {
         return true;

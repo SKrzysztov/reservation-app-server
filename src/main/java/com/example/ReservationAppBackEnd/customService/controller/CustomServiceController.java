@@ -45,17 +45,15 @@ public class CustomServiceController {
     @PutMapping("/update/{id}")
     public ResponseEntity<CustomService> updateService(
             @PathVariable Long id,
-            @RequestBody CustomService updatedService,
-            @RequestAttribute("user") User user) {
-        CustomService updated = customServiceService.updateService(user, id, updatedService);
+            @RequestBody CustomService updatedService) {
+        CustomService updated = customServiceService.updateService(id, updatedService);
         return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteService(
-            @PathVariable Long id,
-            @RequestAttribute("user") User user) {
-        customServiceService.deleteService(user, id);
+            @PathVariable Long id) {
+        customServiceService.deleteService(id);
         return ResponseEntity.noContent().build();
     }
 

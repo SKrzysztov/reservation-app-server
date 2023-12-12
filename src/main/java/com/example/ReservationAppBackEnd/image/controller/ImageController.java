@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/images")
@@ -34,5 +35,15 @@ public class ImageController {
 
         Image savedImage = imageService.saveImage(imageRequest);
         return new ResponseEntity<>(savedImage, HttpStatus.CREATED);
+    }
+    @GetMapping("/{imageId}")
+    public ResponseEntity<byte[]> getImage(@PathVariable Long imageId) {
+        Optional<Image> imageOptional = imageService.getImage(imageId);
+        if (imageOptional.isPresent()) {
+            Image image = imageOptional.get();
+            return ResponseEntity.ok().body(image.getData());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

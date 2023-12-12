@@ -38,6 +38,7 @@ public class WebSecurityConfig {
                 .requestMatchers("/auth/register", "/auth/authenticate").permitAll()
                 .requestMatchers("/auth/**").permitAll()
                 .requestMatchers(antMatcher(HttpMethod.GET, "/api/customServiceCategory/**")).permitAll()
+                .requestMatchers(antMatcher(HttpMethod.GET, "/api/images/**")).permitAll()
                 .requestMatchers("/api/customServiceCategory/**").hasAuthority(Role.ADMIN.name())
                 .requestMatchers(antMatcher(HttpMethod.GET, "/api/customServiceProvider/**")).permitAll()
                 .requestMatchers(antMatcher(HttpMethod.GET, "/api/reservation/**")).permitAll()

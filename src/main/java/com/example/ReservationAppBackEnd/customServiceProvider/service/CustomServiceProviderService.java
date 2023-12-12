@@ -19,10 +19,15 @@ import com.example.ReservationAppBackEnd.user.domain.User;
 import com.example.ReservationAppBackEnd.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +41,14 @@ public class CustomServiceProviderService {
     public CustomServiceProvider saveServiceProvider(CustomServiceProvider serviceProvider) {
         return customServiceProviderRepository.save(serviceProvider);
     }
-    public List<CustomServiceProvider> getAllServiceProviders() {
+    public List<CustomServiceProvider> getServiceProviderByUser(Long userId) {
+        if (!userId.equals(userService.getLoggedUser().getId())) {
+            throw new UnauthorizedException("You are not logged in");
+        } else {
+            return customServiceProviderRepository.findByUserId(userId);
+        }
+    }
+    public List<CustomServiceProvider> getAllCustomServiceProvider(){
         return customServiceProviderRepository.findAll();
     }
 
@@ -67,19 +79,20 @@ public class CustomServiceProviderService {
         User user = userService.getLoggedUser();
         if (user.getRole().equals(Role.ADMIN)) {
 
-            return customServiceProviderRepository.findAllByStatusCustomServiceProvider("WAITING");
+            return customServiceProviderRepository.findAllByStatusCustomServiceProvider(StatusCustomServiceProvider.WAITING);
         } else {
             throw new UnauthorizedException("You are not authorize to search waiting serviceproviders");
         }
     }
 
     public List<CustomServiceProvider> getAllAvailableCustomServiceProviders() {
-        return customServiceProviderRepository.findAllByStatusCustomServiceProvider("AVAILABLE");
+        return customServiceProviderRepository.findAllByStatusCustomServiceProvider(StatusCustomServiceProvider.AVAILABLE);
     }
     public CustomServiceProvider getServiceProvider(Long serviceProviderId) {
         Optional<CustomServiceProvider> serviceProvider = customServiceProviderRepository.findById(serviceProviderId);
         return serviceProvider.orElseThrow(() -> new NotFoundException("Service provider not found with id: " + serviceProviderId));
     }
+
 
     public void deleteServiceProvider(Long id) {
         CustomServiceProvider serviceProvider = customServiceProviderRepository.findById(id)
@@ -91,6 +104,7 @@ public class CustomServiceProviderService {
         }
         customServiceProviderRepository.deleteById(id);
     }
+
 
     public CustomServiceProvider updateServiceProvider(Long id, @Valid CustomServiceProviderRequest serviceProviderRequest) {
         CustomServiceProvider serviceProvider = customServiceProviderRepository.findById(id)
@@ -125,7 +139,7 @@ public class CustomServiceProviderService {
         return customServiceProviderRepository.save(serviceProvider);
     }
 
-    public void setCustomServiceProviderAvailable(Long id) {
+    public CustomServiceProvider setCustomServiceProviderAvailable(Long id) {
         if(!userService.isUserLoggedIn()){
             throw new UnauthorizedException("You are not authorize to create Category");
         }
@@ -133,28 +147,27 @@ public class CustomServiceProviderService {
         if(user.getRole().equals(Role.ADMIN)) {
             CustomServiceProvider serviceProvider = getServiceProvider(id);
             serviceProvider.setStatusCustomServiceProvider(StatusCustomServiceProvider.AVAILABLE);
+            return customServiceProviderRepository.save(serviceProvider);
+
         }
         else {
             throw new UnauthorizedException("You are not authorize to create Category");
         }
     }
-    public CustomServiceProvider addImageToServiceProvider(Long serviceProviderId, ImageRequest imageRequest) {
+    public CustomServiceProvider setImageServiceProvider(Long serviceProviderId, ImageRequest imageRequest) {
         CustomServiceProvider serviceProvider = customServiceProviderRepository.findById(serviceProviderId)
-                .orElseThrow(() -> new RuntimeException("CustomServiceProvider not found with id: " + serviceProviderId));
+                .orElseThrow(() -> new NotFoundException("Service Provider not found"));
 
-        Image savedImage = imageService.saveImage(imageRequest);
-        serviceProvider.setImage(savedImage);
+        User loggedInUser = userService.getLoggedUser();
+        if (!loggedInUser.equals(serviceProvider.getUser())) {
+            throw new UnauthorizedException("You are not allowed to update this Service Provider");
+        }
 
+        Image image = imageService.saveImage(imageRequest);
+        serviceProvider.setImage(image);
         return customServiceProviderRepository.save(serviceProvider);
     }
-    public CustomServiceProvider updateServiceProviderImage(Long serviceProviderId, ImageRequest imageRequest) {
-        CustomServiceProvider serviceProvider = customServiceProviderRepository.findById(serviceProviderId)
-                .orElseThrow(() -> new RuntimeException("CustomServiceProvider not found with id: " + serviceProviderId));
-
-        Image newImage = imageService.saveImage(imageRequest);
-        serviceProvider.setImage(newImage);
-
-        return customServiceProviderRepository.save(serviceProvider);
+    public List<CustomServiceProvider> getAllFilteredByCategoryNames(List<String> categoryNames) {
+        return customServiceProviderRepository.findAllFilteredByCategoryNamesAndStatus(categoryNames, StatusCustomServiceProvider.AVAILABLE);
     }
-
 }
