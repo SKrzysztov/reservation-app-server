@@ -10,6 +10,8 @@ import com.example.ReservationAppBackEnd.user.domain.Role;
 import com.example.ReservationAppBackEnd.user.domain.User;
 import com.example.ReservationAppBackEnd.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,6 +26,8 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
@@ -35,13 +39,27 @@ public class UserService {
     }
 
     public User getLoggedUser() {
-        String login = Optional.ofNullable(SecurityContextHolder.getContext())
-                .map(SecurityContext::getAuthentication)
-                .map(Authentication::getPrincipal)
-                .filter(principal -> principal.getClass().isAssignableFrom(ApplicationUserDetails.class))
-                .map(principal -> (ApplicationUserDetails) principal)
-                .map(ApplicationUserDetails::getLogin)
-                .orElseThrow(() -> new IllegalStateException("User cannot be extracted"));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalStateException("User not authenticated");
+        }
+
+        Object principal = authentication.getPrincipal();
+
+        if (!(principal instanceof ApplicationUserDetails)) {
+            throw new IllegalStateException("Principal is not an instance of ApplicationUserDetails");
+        }
+
+        ApplicationUserDetails userDetails = (ApplicationUserDetails) principal;
+        String login = userDetails.getLogin();
+
+        if (login == null) {
+            throw new IllegalStateException("User login is null");
+        }
+
+        log.info("User extracted: {}", login);
+
         return findUserByLogin(login)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
@@ -81,9 +99,7 @@ public class UserService {
                 throw new UnauthorizedException("Current password is incorrect.");
             }
 
-            // Ustaw nowe hasło
             user.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
-            // Zapisz użytkownika
             userRepository.save(user);
         }
         else{

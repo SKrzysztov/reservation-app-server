@@ -42,7 +42,8 @@ public class CustomServiceProviderService {
         return customServiceProviderRepository.save(serviceProvider);
     }
     public List<CustomServiceProvider> getServiceProviderByUser(Long userId) {
-        if (!userId.equals(userService.getLoggedUser().getId())) {
+        User user = userService.getLoggedUser();
+        if (!userId.equals(user.getId())) {
             throw new UnauthorizedException("You are not logged in");
         } else {
             return customServiceProviderRepository.findByUserId(userId);
