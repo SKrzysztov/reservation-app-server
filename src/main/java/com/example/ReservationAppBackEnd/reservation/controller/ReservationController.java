@@ -4,16 +4,19 @@ import com.example.ReservationAppBackEnd.customService.service.CustomServiceServ
 import com.example.ReservationAppBackEnd.reservation.api.ReservationRequest;
 import com.example.ReservationAppBackEnd.reservation.domain.Reservation;
 import com.example.ReservationAppBackEnd.reservation.service.ReservationService;
+import com.example.ReservationAppBackEnd.reservation.tools.TimeRange;
 import com.example.ReservationAppBackEnd.user.domain.User;
 import com.example.ReservationAppBackEnd.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,5 +66,12 @@ public class ReservationController {
             errors.put(fieldName, errorMessage);
         });
         return errors;
+    }
+    @GetMapping("/unavailable-hours")
+    public ResponseEntity<List<TimeRange>> getUnavailableHours(
+            @RequestParam Long serviceProviderId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        List<TimeRange> unavailableHours = reservationService.getUnavailableTimeRanges(serviceProviderId, date);
+        return ResponseEntity.ok(unavailableHours);
     }
 }

@@ -11,7 +11,10 @@ import com.example.ReservationAppBackEnd.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "customServiceProvider")
@@ -67,5 +70,11 @@ public class CustomServiceProvider {
         } else {
             setAverageOpinion(0.0);
         }
+    }
+    public List<LocalDateTime> getOccupiedHoursForDay(LocalDate date) {
+        return reservations.stream()
+                .filter(reservation -> reservation.getStartTime().toLocalDate().equals(date))
+                .map(Reservation::getStartTime)
+                .collect(Collectors.toList());
     }
 }

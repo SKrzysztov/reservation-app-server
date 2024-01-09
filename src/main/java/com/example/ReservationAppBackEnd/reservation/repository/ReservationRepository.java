@@ -11,4 +11,5 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
  List<Reservation> findByServiceProviderAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(
          CustomServiceProvider serviceProvider, LocalDateTime endTime, LocalDateTime startTime);
+
 }

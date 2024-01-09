@@ -90,13 +90,11 @@ public class CustomServiceProviderController {
             @RequestParam("file") MultipartFile file
     ) {
         try {
-            // Zapisz obraz i zaktualizuj CustomServiceProvider
             ImageRequest imageRequest = new ImageRequest();
             imageRequest.setData(file.getBytes());
 
             CustomServiceProvider updatedServiceProvider = customServiceProviderService.setImageServiceProvider(serviceProviderId, imageRequest);
 
-            // Zwróć zaktualizowany CustomServiceProvider w odpowiedzi
             return new ResponseEntity<>(updatedServiceProvider, HttpStatus.OK);
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
