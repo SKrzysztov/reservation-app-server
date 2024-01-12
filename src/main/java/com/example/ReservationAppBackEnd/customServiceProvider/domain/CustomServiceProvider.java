@@ -13,6 +13,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,6 +56,10 @@ public class CustomServiceProvider {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "image_id", referencedColumnName = "id")
     private Image image;
+
+    private LocalTime startTime;
+
+    private LocalTime endTime;
 
     @Enumerated
     private StatusCustomServiceProvider statusCustomServiceProvider;

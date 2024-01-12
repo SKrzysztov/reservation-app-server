@@ -24,6 +24,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -67,6 +68,8 @@ public class CustomServiceProviderService {
                 .user(loggedInUser)
                 .statusCustomServiceProvider(StatusCustomServiceProvider.WAITING)
                 .customServiceCategory(category)
+                .startTime(serviceProviderRequest.startTime())
+                .endTime(serviceProviderRequest.endTime())
                 .build();
         return customServiceProviderRepository.save(serviceProvider);
         }
@@ -117,11 +120,20 @@ public class CustomServiceProviderService {
         }
 
         String newName = serviceProviderRequest.name();
+        LocalTime newStartTime = serviceProviderRequest.startTime();
+        LocalTime newEndTime = serviceProviderRequest.endTime();
         AddressRequest addressRequest = serviceProviderRequest.address();
 
         if (newName != null && !newName.equals(serviceProvider.getName())) {
             serviceProvider.setName(newName);
         }
+        if (newStartTime != null && !newStartTime.equals(serviceProvider.getStartTime())) {
+            serviceProvider.setStartTime(newStartTime);
+        }
+        if (newEndTime != null && !newEndTime.equals(serviceProvider.getEndTime())) {
+            serviceProvider.setEndTime(newEndTime);
+        }
+
 
         if (addressRequest != null) {
             Address updatedAddress = addressService.updateAddress(serviceProvider.getAddress().getId(), addressRequest);
