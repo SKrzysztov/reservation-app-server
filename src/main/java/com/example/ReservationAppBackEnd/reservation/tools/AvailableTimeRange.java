@@ -2,11 +2,11 @@ package com.example.ReservationAppBackEnd.reservation.tools;
 
 import java.time.LocalDateTime;
 
-public class TimeRange {
+public class AvailableTimeRange {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 
-    public TimeRange(LocalDateTime startTime, LocalDateTime endTime) {
+    public AvailableTimeRange(LocalDateTime startTime, LocalDateTime endTime) {
         this.startTime = startTime;
         this.endTime = endTime;
     }

@@ -4,6 +4,7 @@ import com.example.ReservationAppBackEnd.customService.service.CustomServiceServ
 import com.example.ReservationAppBackEnd.reservation.api.ReservationRequest;
 import com.example.ReservationAppBackEnd.reservation.domain.Reservation;
 import com.example.ReservationAppBackEnd.reservation.service.ReservationService;
+import com.example.ReservationAppBackEnd.reservation.tools.AvailableTimeRange;
 import com.example.ReservationAppBackEnd.reservation.tools.TimeRange;
 import com.example.ReservationAppBackEnd.user.domain.User;
 import com.example.ReservationAppBackEnd.user.service.UserService;
@@ -67,11 +68,11 @@ public class ReservationController {
         });
         return errors;
     }
-    @GetMapping("/unavailable-hours")
-    public ResponseEntity<List<TimeRange>> getUnavailableHours(
+    @GetMapping("/available-hours")
+    public ResponseEntity<List<AvailableTimeRange>> getAvailableHours(
             @RequestParam Long serviceProviderId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        List<TimeRange> unavailableHours = reservationService.getUnavailableTimeRanges(serviceProviderId, date);
-        return ResponseEntity.ok(unavailableHours);
+        List<AvailableTimeRange> availableHours = reservationService.getAvailableTimeRanges(serviceProviderId, date);
+        return ResponseEntity.ok(availableHours);
     }
 }

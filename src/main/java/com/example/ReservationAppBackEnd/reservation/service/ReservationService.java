@@ -10,6 +10,7 @@ import com.example.ReservationAppBackEnd.customServiceProvider.service.CustomSer
 import com.example.ReservationAppBackEnd.reservation.api.ReservationRequest;
 import com.example.ReservationAppBackEnd.reservation.domain.Reservation;
 import com.example.ReservationAppBackEnd.reservation.repository.ReservationRepository;
+import com.example.ReservationAppBackEnd.reservation.tools.AvailableTimeRange;
 import com.example.ReservationAppBackEnd.reservation.tools.TimeRange;
 import com.example.ReservationAppBackEnd.user.domain.User;
 import com.example.ReservationAppBackEnd.error.NotFoundException;
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -93,7 +95,7 @@ public class ReservationService {
         }
         return startTime.plus(duration);
     }
-    public List<TimeRange> getUnavailableTimeRanges(Long serviceProviderId, LocalDate date) {
+    public List<AvailableTimeRange> getAvailableTimeRanges(Long serviceProviderId, LocalDate date) {
         CustomServiceProvider serviceProvider = customServiceProviderRepository.findById(serviceProviderId)
                 .orElseThrow(() -> new EntityNotFoundException("CustomServiceProvider not found"));
 
@@ -110,7 +112,24 @@ public class ReservationService {
             unavailableTimeRanges.add(timeRange);
         }
 
-        return unavailableTimeRanges;
+        List<AvailableTimeRange> availableTimeRanges = new ArrayList<>();
+
+        LocalDateTime workingStartTime = LocalDateTime.of(date, serviceProvider.getStartTime());
+        LocalDateTime workingEndTime = LocalDateTime.of(date, serviceProvider.getEndTime());
+
+        LocalDateTime currentTime = workingStartTime;
+        for (TimeRange unavailableRange : unavailableTimeRanges) {
+            if (currentTime.isBefore(unavailableRange.getStartTime())) {
+                availableTimeRanges.add(new AvailableTimeRange(currentTime, unavailableRange.getStartTime()));
+            }
+            currentTime = unavailableRange.getEndTime();
+        }
+
+        if (currentTime.isBefore(workingEndTime)) {
+            availableTimeRanges.add(new AvailableTimeRange(currentTime, workingEndTime));
+        }
+
+        return availableTimeRanges;
     }
 
 }
