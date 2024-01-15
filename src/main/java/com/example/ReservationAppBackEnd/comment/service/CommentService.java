@@ -51,7 +51,6 @@ public class CommentService {
                     .opinion(commentRequest.opinion())
                     .build();
             Comment savedComment = commentRepository.save(comment);
-            serviceProvider.getComments().add(savedComment);
             serviceProvider.recalculateAverageOpinion();
             customServiceProviderService.saveServiceProvider(serviceProvider);
             return savedComment;
@@ -63,9 +62,12 @@ public class CommentService {
         if (!loggedInUser.equals(existingComment.getUser())) {
             throw new UnauthorizedException("You are not the owner of this comment");
         }
-
+        CustomServiceProvider serviceProvider = customServiceProviderService.getServiceProvider(updatedCommentRequest.serviceProviderId());
         existingComment.setContent(updatedCommentRequest.content());
-        return commentRepository.save(existingComment);
+        existingComment.setOpinion(updatedCommentRequest.opinion());
+        commentRepository.save(existingComment);
+        customServiceProviderService.saveServiceProvider(serviceProvider);
+        return existingComment;
     }
 
     public void deleteComment(Long commentId) {

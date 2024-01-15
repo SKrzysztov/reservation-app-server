@@ -60,7 +60,7 @@ public class CustomServiceProviderController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<CustomServiceProvider> updateServiceProvider(
-            @PathVariable Long id, @RequestBody CustomServiceProviderRequest serviceProviderRequest) {
+            @PathVariable Long id, @RequestBody @Valid CustomServiceProviderRequest serviceProviderRequest) {
         try {
             CustomServiceProvider updatedServiceProvider = customServiceProviderService.updateServiceProvider(id, serviceProviderRequest);
             return new ResponseEntity<>(updatedServiceProvider, HttpStatus.OK);
@@ -108,6 +108,15 @@ public class CustomServiceProviderController {
     public ResponseEntity<CustomServiceProvider> setCustomServiceProviderAvailable(@RequestParam Long id) {
         try {
             CustomServiceProvider updatedServiceProvider = customServiceProviderService.setCustomServiceProviderAvailable(id);
+            return new ResponseEntity<>(updatedServiceProvider, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    @PutMapping("/setUnavailable")
+    public ResponseEntity<CustomServiceProvider> setCustomServiceProviderUnavailable(@RequestParam Long id) {
+        try {
+            CustomServiceProvider updatedServiceProvider = customServiceProviderService.setCustomServiceProviderUnavailable(id);
             return new ResponseEntity<>(updatedServiceProvider, HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

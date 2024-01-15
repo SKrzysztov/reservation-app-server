@@ -157,13 +157,44 @@ public class CustomServiceProviderService {
             throw new UnauthorizedException("You are not authorize to create Category");
         }
         User user = userService.getLoggedUser();
-        if(user.getRole().equals(Role.ADMIN)) {
-            CustomServiceProvider serviceProvider = getServiceProvider(id);
+        CustomServiceProvider serviceProvider = getServiceProvider(id);
+        if(serviceProvider.getStatusCustomServiceProvider().equals(StatusCustomServiceProvider.WAITING))
+        {
+            if(user.getRole().equals(Role.ADMIN)) {
             serviceProvider.setStatusCustomServiceProvider(StatusCustomServiceProvider.AVAILABLE);
             return customServiceProviderRepository.save(serviceProvider);
-
         }
         else {
+            throw new UnauthorizedException("You are not authorize to create Category");
+        }
+        } else if(serviceProvider.getStatusCustomServiceProvider().equals(StatusCustomServiceProvider.UNAVAILABLE)){
+            if(user.getId().equals(serviceProvider.getUser().getId())){
+                serviceProvider.setStatusCustomServiceProvider(StatusCustomServiceProvider.AVAILABLE);
+                return customServiceProviderRepository.save(serviceProvider);
+            }
+            else {
+                throw new UnauthorizedException("You are not authorize to create Category");
+            }
+        }
+        else {
+            throw new UnauthorizedException("You are not authorize to create Category");
+        }
+    }
+    public CustomServiceProvider setCustomServiceProviderUnavailable(Long id) {
+        if (!userService.isUserLoggedIn()) {
+            throw new UnauthorizedException("You are not authorize to create Category");
+        }
+        User user = userService.getLoggedUser();
+        CustomServiceProvider serviceProvider = getServiceProvider(id);
+        if (user.getId().equals(serviceProvider.getUser().getId())) {
+            if(!serviceProvider.getStatusCustomServiceProvider().equals(StatusCustomServiceProvider.WAITING)){
+                serviceProvider.setStatusCustomServiceProvider(StatusCustomServiceProvider.UNAVAILABLE);
+                return customServiceProviderRepository.save(serviceProvider);
+            }
+            else {
+                throw new UnauthorizedException("You are not authorize to create Category");
+            }
+        } else {
             throw new UnauthorizedException("You are not authorize to create Category");
         }
     }

@@ -71,6 +71,10 @@ public class CustomServiceProvider {
                     .mapToDouble(Comment::getOpinion)
                     .average()
                     .orElse(0.0);
+
+            // Zaokrąglenie średniej do dwóch miejsc po przecinku
+            averageRating = Math.round(averageRating * 100.0) / 100.0;
+
             setAverageOpinion(averageRating);
         } else {
             setAverageOpinion(0.0);

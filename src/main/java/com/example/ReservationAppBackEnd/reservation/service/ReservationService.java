@@ -43,21 +43,31 @@ public class ReservationService {
     private final CustomServiceProviderRepository customServiceProviderRepository;
     @Transactional
     public Reservation createReservation(ReservationRequest reservationRequest) {
-        if(!userService.isUserLoggedIn()){
-            throw new UnauthorizedException("you must login");
+        if (!userService.isUserLoggedIn()) {
+            throw new UnauthorizedException("You must login");
         }
+
         User user = userService.getLoggedUser();
         CustomServiceProvider serviceProvider = customServiceProviderService.getServiceProvider(reservationRequest.serviceProviderId());
         CustomService service = customServiceService.getServiceById(reservationRequest.serviceId());
+
+        // Sprawdzenie, czy rezerwacja mieści się w dostępnym czasie dostawcy usług
+        checkServiceAvailability(serviceProvider, reservationRequest.startTime(), calculateEndTimeOfReservation(reservationRequest.startTime(), service.getDuration()));
+
+        // Sprawdzenie dostępności czasu przed utworzeniem rezerwacji
+        checkAvailability(serviceProvider, reservationRequest.startTime(), calculateEndTimeOfReservation(reservationRequest.startTime(), service.getDuration()));
+
         Reservation reservation = Reservation.builder()
                 .user(user)
                 .service(service)
                 .serviceProvider(serviceProvider)
                 .startTime(reservationRequest.startTime())
-                .endTime(calculateEndTimeOfReservation(reservationRequest.startTime(),service.getDuration()))
+                .endTime(calculateEndTimeOfReservation(reservationRequest.startTime(), service.getDuration()))
                 .build();
-            return reservationRepository.save(reservation);
-        }
+
+        return reservationRepository.save(reservation);
+    }
+
 
 
     public void deleteReservation(User user, Long id) {
@@ -130,6 +140,28 @@ public class ReservationService {
         }
 
         return availableTimeRanges;
+    }
+    private void checkAvailability(CustomServiceProvider serviceProvider, LocalDateTime startTime, LocalDateTime endTime) {
+        List<Reservation> existingReservations = serviceProvider.getReservations().stream()
+                .filter(reservation ->
+                        (startTime.isAfter(reservation.getStartTime()) && startTime.isBefore(reservation.getEndTime())) ||
+                                (endTime.isAfter(reservation.getStartTime()) && endTime.isBefore(reservation.getEndTime())) ||
+                                (startTime.isBefore(reservation.getStartTime()) && endTime.isAfter(reservation.getEndTime())) ||
+                                (startTime.isEqual(reservation.getStartTime()) || endTime.isEqual(reservation.getEndTime())))
+                .collect(Collectors.toList());
+
+        if (!existingReservations.isEmpty()) {
+            throw new RuntimeException("Chosen time slot is not available");
+        }
+    }
+    private void checkServiceAvailability(CustomServiceProvider serviceProvider, LocalDateTime startTime, LocalDateTime endTime) {
+        LocalTime serviceStartTime = serviceProvider.getStartTime();
+        LocalTime serviceEndTime = serviceProvider.getEndTime();
+
+        if (startTime.toLocalTime().isBefore(serviceStartTime) || endTime.toLocalTime().isAfter(serviceEndTime)
+                && (!startTime.toLocalTime().equals(serviceStartTime) || !endTime.toLocalTime().equals(serviceEndTime))) {
+            throw new RuntimeException("Chosen time slot is not within the service provider's working hours");
+        }
     }
 
 }
